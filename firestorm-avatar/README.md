@@ -31,11 +31,11 @@ tools change (bump this plugin and re-snapshot `MCP_TOOLS.md`).
 ## Install
 
 ```bash
-claude plugin marketplace add ~/Work/firestorm-avatar-plugin
-claude plugin install firestorm-avatar@firestorm
+claude plugin marketplace add i-doll/plugins
+claude plugin install firestorm-avatar@idoll
 ```
 
-(Or, once pushed to a git remote: `claude plugin marketplace add <owner>/<repo>`.)
+(Or for a local checkout: `claude plugin marketplace add ~/Work/plugins`.)
 
 ### Migrating off the manual setup
 
@@ -51,5 +51,5 @@ rm -rf ~/.claude/skills/firestorm-avatar \
 ## Update
 
 ```bash
-claude plugin marketplace update firestorm
+claude plugin marketplace update idoll
 ```

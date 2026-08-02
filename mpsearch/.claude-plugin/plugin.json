@@ -1,0 +1,9 @@
+{
+  "name": "mpsearch",
+  "version": "0.1.0",
+  "description": "Search the Second Life Marketplace — listings, permissions, reviews, stores and categories — as native tools.",
+  "author": {
+    "name": "Amalthea Skydancer"
+  },
+  "keywords": ["second life", "secondlife", "marketplace", "shopping", "sl"]
+}
