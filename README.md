@@ -1,32 +1,53 @@
 # plugins
 
-`i-doll`'s self-hosted Claude Code **marketplace** (`idoll`). Currently one plugin,
-**`firestorm-avatar`**, which bundles the skills and MCP connection for driving a Second Life
-avatar through the embedded Firestorm MCP server.
+`i-doll`'s self-hosted Claude Code **marketplace** (`idoll`).
 
-This repo is both the marketplace (`.claude-plugin/marketplace.json`) and the plugin
-(`firestorm-avatar/`).
+| Plugin | What it does |
+|---|---|
+| **`firestorm-avatar`** | Skills + MCP connection for driving a Second Life avatar through the embedded Firestorm MCP server. |
+| **`mpsearch`** | Skills + a bundled MCP server for searching the Second Life Marketplace: listings, permissions, reviews, stores, categories. |
+
+This repo is both the marketplace (`.claude-plugin/marketplace.json`) and the plugins themselves.
 
 ## Install
 
 ```bash
 claude plugin marketplace add i-doll/plugins        # or ~/Work/plugins for a local checkout
 claude plugin install firestorm-avatar@idoll
+claude plugin install mpsearch@idoll
 ```
 
 See [`firestorm-avatar/README.md`](firestorm-avatar/README.md) for the viewer-side requirements
 (a compiled `ID`-fork Firestorm with `IDMCPServerEnabled`) and the migration steps off any
 hand-added skills/MCP entries.
 
+See [`mpsearch/README.md`](mpsearch/README.md) for how to connect a Second Life session — Adult
+and Moderate listings, and reviews, are invisible without one — and how to rebuild its bundled
+server from source.
+
 ## Layout
 
 ```
 plugins/
-├── .claude-plugin/marketplace.json     # marketplace "idoll" -> plugin ./firestorm-avatar
-└── firestorm-avatar/                    # the plugin
+├── .claude-plugin/marketplace.json     # marketplace "idoll" -> both plugins
+├── firestorm-avatar/
+│   ├── .claude-plugin/plugin.json
+│   ├── .mcp.json                       # firestorm HTTP MCP server @ 127.0.0.1:33777
+│   ├── skills/{firestorm-avatar,firestorm-chat,firestorm-rlv-relay}/SKILL.md
+│   ├── MCP_TOOLS.md                    # tool reference snapshot
+│   └── README.md
+└── mpsearch/
     ├── .claude-plugin/plugin.json
-    ├── .mcp.json                        # firestorm HTTP MCP server @ 127.0.0.1:33777
-    ├── skills/{firestorm-avatar,firestorm-chat,firestorm-rlv-relay}/SKILL.md
-    ├── MCP_TOOLS.md                     # tool reference snapshot
+    ├── .mcp.json                       # mpsearch stdio MCP server (node dist/mcp.js)
+    ├── dist/{mcp,cli}.js               # dependency-free bundles, built from the mpsearch repo
+    ├── skills/marketplace-search/SKILL.md
+    ├── commands/auth.md                # /mpsearch:auth — connect a Second Life session
     └── README.md
 ```
+
+## A note on bundled build output
+
+`mpsearch/dist/` is committed build output, not source. It is built in the separate `mpsearch`
+repository and copied here by `pnpm run sync-plugin` there, so that installing this plugin needs
+nothing beyond `node` — no package install step. Rebuild and re-sync after changing that repo's
+source, or the plugin ships stale code.

@@ -1,9 +1,11 @@
 {
   "name": "mpsearch",
+  "displayName": "Second Life Marketplace Search",
+  "description": "Skills + a bundled MCP server for searching the Second Life Marketplace: listings, copy/modify/transfer permissions, reviews, creator stores and the category tree. Adult and Moderate listings, and reviews, require a logged-in session — the plugin ships the command that captures one.",
   "version": "0.1.0",
-  "description": "Search the Second Life Marketplace — listings, permissions, reviews, stores and categories — as native tools.",
   "author": {
-    "name": "Amalthea Skydancer"
+    "name": "i-doll",
+    "url": "https://github.com/i-doll"
   },
-  "keywords": ["second life", "secondlife", "marketplace", "shopping", "sl"]
+  "keywords": ["second-life", "marketplace", "shopping", "mcp", "search"]
 }

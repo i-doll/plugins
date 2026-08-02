@@ -22,28 +22,39 @@ cannot do it for them. Present these instructions:
 > node "${CLAUDE_PLUGIN_ROOT}/dist/cli.js" auth capture
 > ```
 >
-> Then:
-> 1. Open <https://marketplace.secondlife.com> in your browser, logged in.
-> 2. Press F12 → **Network** tab → reload the page.
-> 3. Right-click the first request (the HTML document) → **Copy** → **Copy as cURL**.
-> 4. Paste it into the waiting prompt and press **Ctrl-D**.
+> Then, in your browser:
+> 1. Open <https://marketplace.secondlife.com> while logged in to Second Life.
+> 2. Open developer tools (**F12**, or ⌥⌘I on macOS) and select the **Network** tab.
+> 3. Reload the page.
+> 4. Right-click the first request — the HTML document, usually the top row — and
+>    choose **Copy → Copy as cURL**. If your browser offers variants, pick the
+>    **bash** one; the Windows `cmd` form is also accepted.
+> 5. Paste it into the waiting prompt, then press **Ctrl-D** (on Windows, **Ctrl-Z**
+>    then Enter).
 >
-> Nothing is transmitted anywhere — the cookies are written only to
-> `~/.config/mpsearch/config.json`, mode 0600.
+> Nothing is transmitted anywhere — the cookies are written only to the local config
+> file (`$XDG_CONFIG_HOME/mpsearch/config.json`, falling back to
+> `~/.config/mpsearch/config.json`), created mode 0600.
+
+Chrome, Edge, Firefox and Safari all expose "Copy as cURL" in the Network tab, so
+this works whatever they use.
 
 Explain *why* the cURL route rather than a plain cookie export: it carries the
 User-Agent as well, and Cloudflare binds the `cf_clearance` cookie to the exact
-User-Agent that earned it, so a cookie-only capture can start getting blocked.
+User-Agent that earned it, so a cookie-only capture can start getting blocked later.
 
-If they already have a cookie jar from a browser extension, the alternative is:
+If they already have a cookie jar exported by a browser extension, the alternative is:
 
 ```
 node "${CLAUDE_PLUGIN_ROOT}/dist/cli.js" auth import /path/to/cookies.txt
 ```
 
+This needs Node 20 or newer on PATH. If `node` is missing, say so plainly rather than
+improvising — the bundled CLI cannot run without it.
+
 Once they have run it, call `session_status` again to confirm, and report the result
 plainly — including if it still says anonymous, which usually means the browser
 session itself was logged out.
 
-Sessions expire after a while. When searches start warning about maturity, or
-reviews come back empty, this is the fix.
+Sessions expire after a while. When searches start warning about maturity, or reviews
+come back empty, this is the fix.
