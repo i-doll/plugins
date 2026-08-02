@@ -1,11 +1,11 @@
 ---
 name: firestorm-avatar
-description: Use when driving Five's Second Life avatar through the Firestorm viewer — searching the world, browsing/organizing/wearing inventory, giving items, editing your own profile and viewing others', inspecting nearby avatars, group chat/notices, and uploading assets (images, sounds, animations, materials). All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
+description: Use when driving the user's Second Life avatar through the Firestorm viewer — searching the world, browsing/organizing/wearing inventory, giving items, editing your own profile and viewing others', inspecting nearby avatars, group chat/notices, and uploading assets (images, sounds, animations, materials). All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
 ---
 
 # Driving the Firestorm avatar
 
-Five's custom Firestorm viewer (an `ID`-prefixed fork) embeds an MCP server so you can drive
+the user's custom Firestorm viewer (an `ID`-prefixed fork) embeds an MCP server so you can drive
 the avatar directly. The tools appear under the **`firestorm`** MCP server (registered in
 `~/.claude.json`, user scope). Everything runs on the viewer's main thread and is
 non-blocking — long operations stream their result back over SSE.
@@ -27,7 +27,7 @@ root for the written reference. By area:
 | Area | Tools | Use for |
 |---|---|---|
 | Health | `ping` | Liveness check |
-| Viewer | `viewer.notify` | Post a toast to get Five's attention (persistent by default; `tip:true` = fades) |
+| Viewer | `viewer.notify` | Post a toast to get the user's attention (persistent by default; `tip:true` = fades) |
 | RLV | `rlv.getStatus`, `rlv.getRestrictions`, `rlv.canDo` | See what's restricted **before** acting |
 | Inventory | `inventory.getFolder`/`getItem`/`search`/`createFolder`/`rename`/`move`/`delete`/`giveItem`/`giveFolder`/`createItem`/`refresh` | Browse, organize, give |
 | Notecards/Scripts | `notecard.read`/`write`, `script.read`/`write` | Read/edit item contents; scripts compile (mono/lsl2/luau/lsl-luau) |
@@ -49,7 +49,7 @@ advisory — the action does not happen.
 - Common gates: `@showinv` (inventory browse), `@detach`/wearable locks (appearance),
   `@shownames` (others' names/profiles), `@viewnote`/`@viewscript` (contents), `@shownearby`
   (nearby avatars), `@showsearch` (search), `@share` (giving), `@setgroup` (group activate).
-- If blocked, surface the restriction and its source object to Five rather than retrying.
+- If blocked, surface the restriction and its source object to the user rather than retrying.
 
 ## Uploads cost real L$ — always dry-run first
 
@@ -59,7 +59,7 @@ Every upload tool is two-phase and **defaults to a dry run**:
    plus the total and your current balance. **Spends nothing.**
 2. **Confirm** (`"confirm": true`): actually uploads.
 
-The intended flow for "upload these for me into folder X": dry-run → show Five the cost →
+The intended flow for "upload these for me into folder X": dry-run → show the user the cost →
 get approval → re-call with `confirm: true`. One approval per batch, not per file.
 
 - Files come from `paths` (explicit list) and/or `dir` (globs that type's extensions).
@@ -69,7 +69,7 @@ get approval → re-call with `confirm: true`. One approval per batch, not per f
 
 ## Identifying what someone is wearing
 
-When Five asks "what boots is X wearing?" (or any specific item — a hat, a collar, a skirt):
+When the user asks "what boots is X wearing?" (or any specific item — a hat, a collar, a skirt):
 
 1. Call `avatars.getWorn` for that avatar. It returns every attachment with its **object name**
    (resolved via a server round-trip; the call is deferred a moment while names come back).
@@ -79,7 +79,7 @@ When Five asks "what boots is X wearing?" (or any specific item — a hat, a col
 3. **Match the item type loosely / by synonym.** "boots" can read as `boot`, `shoe`, `heels`,
    `stilettos`, `sneakers`, `platforms`, etc. Look across all attachment names for anything that
    plausibly matches the requested category, and present the best candidate(s) with their names.
-4. If several plausibly match (or none clearly do), list the candidates by name and let Five
+4. If several plausibly match (or none clearly do), list the candidates by name and let the user
    decide, rather than guessing from position.
 
 Only attached *objects* are visible this way — never another avatar's clothing/bodypart wearable
@@ -89,7 +89,7 @@ appear; say so if nothing matches.
 ## Gotchas (learned the hard way)
 
 - **Upload cost is grid- and account-dependent.** Uploads are free on the Beta/test grid **and
-  for some accounts** (Five's included), so `cost: 0` is often legitimate, not a bug. On
+  for some accounts**, so `cost: 0` is often legitimate, not a bug. On
   accounts/grids that charge, the dry-run shows the real price (≈L$10, more for ≥2K textures).
   Trust the dry-run's `total_cost` + `balance`.
 - **Sounds: ≤10 seconds, 44.1 kHz mono 16-bit PCM.** The dry-run does *not* yet check length —
@@ -118,5 +118,5 @@ appear; say so if nothing matches.
 
 ## Scope discipline
 
-When Five is testing, act only on **Five's own** avatar and inventory unless explicitly told
+When the user is testing, act only on **the user's own** avatar and inventory unless explicitly told
 otherwise — don't give inventory to, or otherwise act on, other avatars.

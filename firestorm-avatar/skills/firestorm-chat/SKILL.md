@@ -1,6 +1,6 @@
 ---
 name: firestorm-chat
-description: Use when talking to in-world scripted objects, HUDs, vendors, or any LSL protocol from Five's Second Life avatar — sending chat on a channel and capturing the object's reply. Routes through the Firestorm LSL bridge (the `chat.*` tools of the firestorm MCP server) so it works on ANY channel, including negative/protocol channels the viewer can't use directly. For RLV relays specifically, use the firestorm-rlv-relay skill (which builds on this).
+description: Use when talking to in-world scripted objects, HUDs, vendors, or any LSL protocol from the user's Second Life avatar — sending chat on a channel and capturing the object's reply. Routes through the Firestorm LSL bridge (the `chat.*` tools of the firestorm MCP server) so it works on ANY channel, including negative/protocol channels the viewer can't use directly. For RLV relays specifically, use the firestorm-rlv-relay skill (which builds on this).
 ---
 
 # In-world scripted chat (via the LSL bridge)
@@ -59,7 +59,7 @@ concurrent agent listens. If you leak them the bridge stops accepting new listen
   your avatar. Use shout to reach an object across a room; the object must be in range.
 - **By default the message is sent from the bridge object, not "as you."** Scripts see the
   bridge's object key as the sender (which is exactly what makes replies routable). To instead
-  speak **as the avatar** — normal public chat that reads as Five — pass `chat.send
+  speak **as the avatar** — normal public chat that reads as the user — pass `chat.send
   {as_avatar: true}` (channel 0 or a positive channel only; it's fire-and-forget, no bridge
   listen, and can't reach negative/protocol channels). Use `as_avatar` for talking to people;
   use the default bridge path for talking to scripts/relays.
@@ -76,7 +76,7 @@ concurrent agent listens. If you leak them the bridge stops accepting new listen
 
 ## Scope discipline
 
-Act on Five's behalf. Sending chat can trigger scripted objects and be heard by others in
+Act on the user's behalf. Sending chat can trigger scripted objects and be heard by others in
 range — don't spam, and don't drive other people's objects without reason. See
 [[firestorm-avatar]] for the broader avatar-driving conventions and [[firestorm-rlv-relay]] for
 the RLV relay protocol specifically.

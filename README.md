@@ -1,7 +1,7 @@
 # firestorm-avatar-plugin
 
 A self-hosted Claude Code **marketplace** containing one plugin, **`firestorm-avatar`**, which
-bundles the skills and MCP connection for driving Five's Second Life avatar through the embedded
+bundles the skills and MCP connection for driving the user's Second Life avatar through the embedded
 Firestorm MCP server.
 
 This repo is both the marketplace (`.claude-plugin/marketplace.json`) and the plugin

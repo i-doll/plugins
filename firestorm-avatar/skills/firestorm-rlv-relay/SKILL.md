@@ -1,6 +1,6 @@
 ---
 name: firestorm-rlv-relay
-description: Use when driving an RLV relay from Five's Second Life avatar — sending RLV relay commands (apply/lift restrictions like @detach, @tploc) to a worn relay and reading its ok/ko acknowledgements. Built on the firestorm-chat skill's chat.* tools over the LSL bridge. Covers the RLV Relay protocol (channel -1812221819, the ident,uuid,@cmd format, !version/!release/!pong, and the ack), plus how to confirm effects and clean up.
+description: Use when driving an RLV relay from the user's Second Life avatar — sending RLV relay commands (apply/lift restrictions like @detach, @tploc) to a worn relay and reading its ok/ko acknowledgements. Built on the firestorm-chat skill's chat.* tools over the LSL bridge. Covers the RLV Relay protocol (channel -1812221819, the ident,uuid,@cmd format, !version/!release/!pong, and the ack), plus how to confirm effects and clean up.
 ---
 
 # RLV relay interaction (via the LSL bridge)
@@ -37,9 +37,9 @@ command (auto, or ask + the target agrees). This is consent-sensitive — see th
 
 ```
 chat.listen  {channel: -1812221819, seconds: 15}
-chat.send    {channel: -1812221819, message: "iris,<TARGET-AVATAR-UUID>,@detach=n"}
+chat.send    {channel: -1812221819, message: "agent,<TARGET-AVATAR-UUID>,@detach=n"}
 chat.replies {channel: -1812221819, wait_seconds: 5}
-   -> look for a reply whose text starts with "iris," and ends with ",ok" (or ",ko")
+   -> look for a reply whose text starts with "agent," and ends with ",ok" (or ",ko")
 chat.stopListen {channel: -1812221819}
 ```
 
@@ -69,6 +69,6 @@ actively waiting for an ack.
 - Commanding your **own** worn relay (self-bondage / testing your own setup) is straightforward.
 - Commanding **another avatar's** relay applies real restrictions to *them*. Only do this with
   clear, current consent, and only if their relay's mode/whitelist already permits it (a `ko`
-  usually means it doesn't). When in doubt, don't — surface the situation to Five instead.
+  usually means it doesn't). When in doubt, don't — surface the situation to the user instead.
 - RLV `@sendchannel` on your own avatar can block the relay channel; `chat.send` will return
   `-32011` if so.

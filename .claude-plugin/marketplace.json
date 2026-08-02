@@ -1,15 +1,15 @@
 {
-  "name": "firestorm",
+  "name": "idoll",
   "owner": {
-    "name": "Five (i-doll)",
+    "name": "i-doll",
     "url": "https://github.com/i-doll"
   },
-  "description": "Firestorm avatar-driving tools for Claude Code: skills + the embedded MCP server connection.",
+  "description": "i-doll's Claude Code plugins.",
   "plugins": [
     {
       "name": "firestorm-avatar",
       "source": "./firestorm-avatar",
-      "description": "Drive Five's Second Life avatar via the embedded Firestorm MCP server — inventory, appearance, profiles, search, groups, uploads, nearby-avatar inspection, in-world chat + RLV relays. Bundles the three firestorm-* skills and the MCP connection."
+      "description": "Drive the user's Second Life avatar via the embedded Firestorm MCP server — inventory, appearance, profiles, search, groups, uploads, nearby-avatar inspection, in-world chat + RLV relays. Bundles the three firestorm-* skills and the MCP connection."
     }
   ]
 }

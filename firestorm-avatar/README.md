@@ -1,7 +1,7 @@
 # firestorm-avatar (Claude Code plugin)
 
 Bundles the **client side** of the embedded Firestorm MCP server — the skills and the MCP
-connection — so it's portable and versioned. It lets an AI agent drive Five's Second Life avatar:
+connection — so it's portable and versioned. It lets an AI agent drive the user's Second Life avatar:
 inventory, appearance, profiles, search, groups, asset uploads, nearby-avatar inspection, and
 bridge-mediated in-world chat / RLV relays.
 
@@ -16,7 +16,7 @@ bridge-mediated in-world chat / RLV relays.
 
 ## Requirements (the server side is NOT in this plugin)
 
-The actual MCP server is compiled into Five's `ID`-fork of Firestorm (`~/Work/phoenix-firestorm`),
+The actual MCP server is compiled into the user's `ID`-fork of Firestorm (`~/Work/phoenix-firestorm`),
 not shipped here. To use this plugin you need that viewer:
 
 - Running and logged in.
