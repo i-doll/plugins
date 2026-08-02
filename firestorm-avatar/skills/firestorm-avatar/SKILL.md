@@ -5,7 +5,7 @@ description: Use when driving the user's Second Life avatar through the Firestor
 
 # Driving the Firestorm avatar
 
-the user's custom Firestorm viewer (an `ID`-prefixed fork) embeds an MCP server so you can drive
+The user's custom Firestorm viewer (an `ID`-prefixed fork) embeds an MCP server so you can drive
 the avatar directly. The tools appear under the **`firestorm`** MCP server (registered in
 `~/.claude.json`, user scope). Everything runs on the viewer's main thread and is
 non-blocking — long operations stream their result back over SSE.
