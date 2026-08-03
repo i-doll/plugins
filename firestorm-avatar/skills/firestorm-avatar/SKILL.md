@@ -34,7 +34,7 @@ root for the written reference. By area:
 | Appearance | `appearance.wearItems`/`detachItems`/`wearOutfit`/`listOutfits`/`getWorn` | Wear/remove, outfits |
 | Profile | `profile.get`/`setSelf`, `profile.getPicks`/`getClassifieds`, `people.getNames`, `people.getFriends` | View/edit profiles, read picks & classified ads in full, resolve names, list friends (online + granted rights) |
 | Search | `search.people`/`places`/`groups`/`events`/`land`/`classifieds` | Directory search (headless) |
-| Nearby | `avatars.getNearby`/`getWorn` | Who's around, what they have attached |
+| Nearby | `avatars.getNearby`, `avatars.getWorn` | Who's around, where they are & which way they face, what they have attached |
 | Movement & world | `objects.getNearby`, `movement.teleport`/`walkTo`/`turn`/`sit`/`stand`, `agent.getLocation`, `object.touch` | Find nearby objects, go somewhere (teleport or walk), turn in place, sit, know where you are, operate objects |
 | Animation (AO) | `ao.getStatus`/`setEnabled`/`selectSet`/`cycle` | Firestorm client-side animation overlay |
 | Vision & HUD | `vision.snapshot`, `hud.click` | See the scene (snapshot; `show_hud:true` includes HUD overlays), click a HUD button by screen coordinate |
@@ -107,6 +107,11 @@ appear; say so if nothing matches.
   `object.touch`, `movement.sit`, and `movement.walkTo` need. `scripted_only:true` cuts scenery
   noise down to interactive objects. (It does **not** list avatars — use `avatars.getNearby` for
   those, and `avatars.getWorn` for a specific avatar's attachment object_ids.)
+- **Positioning relative to a person.** `avatars.getNearby` gives each avatar's `position` and
+  `facing` (unit vector, + `heading_deg`). "Behind" someone is the side their back is toward, **not**
+  the side away from you — so to stand behind them walk to `position − N·facing`, and to their front
+  `position + N·facing` (N metres). Then `movement.turn {avatar_id}` to face them. Don't infer
+  "behind" from your own approach direction; use their `facing`.
 - **Moving.** Two ways: `movement.teleport` (instant, any distance — exactly one of a landmark item,
   a global `[x,y,z]`, or a nearby `avatar_id`; async, up to 60s; `status:"timeout"` may just be a
   slow region, `"failed"` = sim refused) and `movement.walkTo` (walk on foot — the "move to here"

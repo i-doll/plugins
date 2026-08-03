@@ -119,7 +119,7 @@ Talk to in-world scripted objects, HUDs, vendors, and **RLV relays** on any chan
 
 | Tool | Params | Description |
 |---|---|---|
-| `avatars.getNearby` | `radius`: number | List avatars within {"radius"} metres (default 128, max 512) of you: id, distance, whether their body is loaded, and name (subject to RLV @shownames). Blocked by RLV @shownearby. |
+| `avatars.getNearby` | `radius`: number | List avatars within {"radius"} metres (default 128, max 512) of you: id, distance, **global `position:[x,y,z]`**, **which way they face** (`facing:[x,y,z]` unit + `heading_deg`, 0=E/90=N; loaded avatars only), whether their body is loaded, and name (subject to RLV @shownames). To stand **behind** someone, walk to `position − N·facing`; **in front**, `position + N·facing`. Blocked by RLV @shownearby. |
 | `avatars.getWorn` | `avatar_id*`: string<br>`resolve_names`: boolean | List the publicly-visible ATTACHMENTS worn by a nearby avatar ({"avatar_id"}): attach-point name, point id, object id, and the object **name** (resolved via a server round-trip; pass `resolve_names:false` to skip and return immediately). **To identify an item type (boots, hat, collar…), enumerate all attachments and match on the object name — never infer from the attach point, since rigged mesh can attach anywhere.** Only in-world attachments are observable — HUDs and clothing/bodypart wearables cannot be enumerated for anyone. The avatar must be loaded in range. Blocked by RLV @shownearby / @shownames. |
 
 ## Movement & world
