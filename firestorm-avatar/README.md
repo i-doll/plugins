@@ -2,8 +2,9 @@
 
 Bundles the **client side** of the embedded Firestorm MCP server — the skills and the MCP
 connection — so it's portable and versioned. It lets an AI agent drive the user's Second Life avatar:
-inventory, appearance, profiles, search, groups, asset uploads, nearby-avatar inspection, and
-bridge-mediated in-world chat / RLV relays.
+movement (teleport/sit/stand), vision (viewport snapshot), inventory, appearance, profiles, search,
+groups, 1:1 IM, answering offers/dialogs, in-world object touch, asset uploads, nearby-avatar
+inspection, bridge-mediated in-world chat / RLV relays, and guarded L$ payments.
 
 ## What's in here
 
@@ -24,6 +25,8 @@ not shipped here. To use this plugin you need that viewer:
   avatar while enabled).
 - For the `chat.*` tools: **`UseLSLBridge`** on and **`IDMCPBridgeChatEnabled = 1`**, with the
   bridge attached at **v2.30+**.
+- For `money.pay` (spends real L$): **`IDMCPMoneyEnabled = 1`** (off by default), capped by
+  **`IDMCPMoneyMaxAmount`** (default 1000). `money.getBalance` needs neither.
 
 This plugin's version tracks the viewer's tool surface — keep them in step when the viewer's MCP
 tools change (bump this plugin and re-snapshot `MCP_TOOLS.md`).

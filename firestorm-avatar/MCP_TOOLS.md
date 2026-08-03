@@ -13,7 +13,7 @@ Custom fork (`ID` prefix). An in-process MCP server that lets an AI agent drive 
 
 Every mutating or identity-revealing tool passes a single RLV gate. A blocked call returns JSON-RPC error `-32011` with `{restriction, sources:[{object_id,root_id,attach_pt,name}], checkedAt}`. Use `rlv.getRestrictions` to see what's active and `rlv.canDo` to check a call before making it.
 
-**51 tools** across 14 areas.
+**65 tools** across 19 areas.
 
 ## Health
 
@@ -122,6 +122,44 @@ Talk to in-world scripted objects, HUDs, vendors, and **RLV relays** on any chan
 | `avatars.getNearby` | `radius`: number | List avatars within {"radius"} metres (default 128, max 512) of you: id, distance, whether their body is loaded, and name (subject to RLV @shownames). Blocked by RLV @shownearby. |
 | `avatars.getWorn` | `avatar_id*`: string<br>`resolve_names`: boolean | List the publicly-visible ATTACHMENTS worn by a nearby avatar ({"avatar_id"}): attach-point name, point id, object id, and the object **name** (resolved via a server round-trip; pass `resolve_names:false` to skip and return immediately). **To identify an item type (boots, hat, collar…), enumerate all attachments and match on the object name — never infer from the attach point, since rigged mesh can attach anywhere.** Only in-world attachments are observable — HUDs and clothing/bodypart wearables cannot be enumerated for anyone. The avatar must be loaded in range. Blocked by RLV @shownearby / @shownames. |
 
+## Movement & world
+
+Embodiment: move the avatar, know where it is, and operate in-world objects. Teleport and sit/stand are async (the tool waits for the result). `object.touch` is fire-and-forget — a resulting blue-menu (`llDialog`) arrives via `notifications.list` / `notifications.respond`, not this tool's result.
+
+| Tool | Params | Description |
+|---|---|---|
+| `movement.teleport` | `landmark_item_id`: string<br>`global_position`: number[3]<br>`avatar_id`: string | Teleport your avatar. Provide **exactly one** destination: a landmark inventory item, a grid-global `[x,y,z]` (from `search.places`/`avatars.getNearby`), or a nearby avatar to go to. Waits up to 60s; returns `{status: "arrived"\|"failed"\|"timeout", region, global_position}`. Blocked by RLV @tplm (landmark) / @tploc / @tplocal. |
+| `movement.sit` | `object_id*`: string | Sit on an in-world object (must be loaded in range). Waits up to 5s → `{sitting, object_id}`. Blocked by RLV @sit. |
+| `movement.stand` | — | Stand up if sitting. Waits up to 5s → `{sitting}`. Blocked by RLV @unsit. |
+| `agent.getLocation` | — | Where you are now: `{region:{name}, position:{global,region}, parcel:{name, owner_id, area, flags, raw_flags}}`. |
+| `object.touch` | `id*`: string<br>`face`: integer | Touch/click an in-world object (operates vendors, doors, RLV furniture). Fire-and-forget; any resulting blue-menu arrives via `notifications.*`. Blocked by RLV @touchall / @touchworld / @touchthis / @interact. |
+
+## Vision
+
+| Tool | Params | Description |
+|---|---|---|
+| `vision.snapshot` | `width`: integer<br>`height`: integer<br>`hide_ui`: boolean<br>`show_hud`: boolean<br>`format`: jpeg \| png<br>`quality`: integer<br>`to_file`: boolean | Render the current 3D view as an image you can look at — the avatar's eyes. `width` default 1024 (256–2048), `height` from window aspect, `hide_ui` default true, `format` jpeg (default)/png, `quality` (jpeg) default 80. Returns `{format, width, height, image_base64}`, or `{..., path}` with `to_file:true`. No RLV gate (own view). |
+
+## Instant messaging (1:1)
+
+Private person-to-person IM (not public chat, not group chat). Inbound P2P IMs are buffered from server start; `im.replies` drains them. RLV @sendim gates sending; @recvim filters what's received.
+
+| Tool | Params | Description |
+|---|---|---|
+| `im.send` | `avatar_id*`: string<br>`message*`: string | Send a 1:1 IM to an avatar. Returns `{sent, session_id}`. Blocked by RLV @sendim. |
+| `im.replies` | `avatar_id`: string<br>`session_id`: string<br>`wait_seconds`: integer | Read newly-received IMs (optionally filter to one correspondent; omit both for all). `wait_seconds` (max 30) waits for the first if nothing buffered. Returns `{replies:[{from_id, from, text, session_id, time}]}`. |
+| `im.getConversations` | — | List open 1:1 conversations: `{conversations:[{session_id, avatar_id, name, num_unread}]}`. |
+| `im.getMessages` | `avatar_id`: string<br>`session_id`: string<br>`limit`: integer | Read stored history for one conversation (`limit` default 20, newest first). Read-only — does **not** clear the user's unread badge. Returns `{session_id, messages:[{from, from_id, message, timestamp, is_history}]}`. |
+
+## Notifications & offers
+
+One generic pair answers everything pushed at the avatar — inventory offers, teleport offers, friendship requests, group invites, and blue-menu `llDialog`s. This is the only way to accept an offer or press a dialog button.
+
+| Tool | Params | Description |
+|---|---|---|
+| `notifications.list` | — | List pending notifications: `{id, name, type (offer_inventory\|offer_teleport\|offer_friendship\|invite_group\|script_dialog\|other), message, buttons:[names], payload}`. |
+| `notifications.respond` | `id*`: string<br>`button*`: string | Press a button on a pending notification by **name** (e.g. `Keep`/`Discard` for an item offer, `Accept`/`Decline`, or a blue-menu label). Returns `{responded, button}`. Script-dialog presses enforce RLV @sendchat / @sendchannel. |
+
 ## Groups
 
 | Tool | Params | Description |
@@ -150,3 +188,12 @@ Uploads cost real **L$**. Every upload tool is two-phase: a call **without** `co
 - **Server-side validation still bites at upload.** The dry-run checks extension + existence (+ decodability for images), but the strict per-type rules are enforced by the server/encoder at upload time: sounds must be **≤10s** 44.1 kHz mono 16-bit PCM — an over-length WAV *passes dry-run* but fails on `confirm` with SL's generic "server difficulties" error. Trim to ≤10s.
 - **Confirmed results.** Image/sound/animation return real `item_id` + `asset_id` per file once the server finishes. Materials are fire-and-forget (no per-item callback) — the response reports the enqueue + estimated cost; confirm the actual items with `inventory.getFolder` on the dest.
 - **Batch = one response.** A batch fans out to N concurrent uploads and the tool replies once, when all N have reported (or pre-validation-failed).
+
+## Money (L$)
+
+`money.pay` spends **real currency**. It is fenced: refused unless Debug Setting `IDMCPMoneyEnabled = 1` (off by default), capped by `IDMCPMoneyMaxAmount` (default 1000), gated by RLV @pay/@buy, and it checks affordability (never auto-opening the buy-currency floater). Use `dry_run:true` to preview without spending. `money.getBalance` is read-only and always available.
+
+| Tool | Params | Description |
+|---|---|---|
+| `money.getBalance` | `fresh`: boolean | Your current L$ balance. `fresh:true` requests an update from the server and waits briefly. Returns `{balance, currency, fresh}`. |
+| `money.pay` | `target_id*`: string<br>`target_kind*`: avatar \| object<br>`amount*`: integer<br>`description`: string<br>`dry_run`: boolean | Pay L$ to an avatar or object. `dry_run:true` → `{would_pay:{target_id, resolved_name, amount}, affordable}` without sending. On send → `{paid, target_id, amount}`. Requires `IDMCPMoneyEnabled`, within `IDMCPMoneyMaxAmount`, RLV @pay/@buy allowed, and sufficient funds. |

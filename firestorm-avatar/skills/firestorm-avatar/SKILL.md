@@ -1,6 +1,6 @@
 ---
 name: firestorm-avatar
-description: Use when driving the user's Second Life avatar through the Firestorm viewer — searching the world, browsing/organizing/wearing inventory, giving items, editing your own profile and viewing others', inspecting nearby avatars, group chat/notices, and uploading assets (images, sounds, animations, materials). All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
+description: Use when driving the user's Second Life avatar through the Firestorm viewer — moving (teleport/sit/stand), seeing (viewport snapshot), searching the world, browsing/organizing/wearing inventory, giving items, editing your own profile and viewing others', inspecting nearby avatars, 1:1 IM and group chat/notices, answering offers/dialogs, touching in-world objects, uploading assets (images, sounds, animations, materials), and paying L$. All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
 ---
 
 # Driving the Firestorm avatar
@@ -35,8 +35,13 @@ root for the written reference. By area:
 | Profile | `profile.get`/`setSelf`, `profile.getPicks`/`getClassifieds`, `people.getNames`, `people.getFriends` | View/edit profiles, read picks & classified ads in full, resolve names, list friends (online + granted rights) |
 | Search | `search.people`/`places`/`groups`/`events`/`land`/`classifieds` | Directory search (headless) |
 | Nearby | `avatars.getNearby`/`getWorn` | Who's around, what they have attached |
+| Movement & world | `movement.teleport`/`sit`/`stand`, `agent.getLocation`, `object.touch` | Go somewhere, sit, know where you are, operate objects |
+| Vision | `vision.snapshot` | Render the current view as an image — the avatar's eyes |
+| IM (1:1) | `im.send`/`replies`/`getConversations`/`getMessages` | Private person-to-person messaging |
+| Notifications | `notifications.list`/`respond` | Answer offers (items/teleport/friendship/group) + blue-menu dialogs |
 | Groups | `group.list`/`getInfo`/`activate`/`sendIM`/`getNotices`/`sendNotice` | Group chat + notices |
 | Uploads | `upload.image`/`sound`/`animation`/`material` | Upload assets (cost L$ — see below) |
+| Money | `money.getBalance`/`pay` | Check balance; pay L$ (pay is fenced — see below) |
 
 ## RLV restrictions are HARD-enforced
 
@@ -48,7 +53,9 @@ advisory — the action does not happen.
   (would this specific call be allowed?).
 - Common gates: `@showinv` (inventory browse), `@detach`/wearable locks (appearance),
   `@shownames` (others' names/profiles), `@viewnote`/`@viewscript` (contents), `@shownearby`
-  (nearby avatars), `@showsearch` (search), `@share` (giving), `@setgroup` (group activate).
+  (nearby avatars), `@showsearch` (search), `@share` (giving), `@setgroup` (group activate),
+  `@tplm`/`@tploc`/`@tplocal` (teleport), `@sit`/`@unsit` (sit/stand), `@touchworld`/`@touchall`/
+  `@interact` (object.touch), `@sendim`/`@recvim` (IM), `@pay`/`@buy` (money.pay).
 - If blocked, surface the restriction and its source object to the user rather than retrying.
 
 ## Uploads cost real L$ — always dry-run first
@@ -85,6 +92,36 @@ When the user asks "what boots is X wearing?" (or any specific item — a hat, a
 Only attached *objects* are visible this way — never another avatar's clothing/bodypart wearable
 layers or HUDs (see gotchas). So "boots" that are actually a system/mesh *clothing* layer won't
 appear; say so if nothing matches.
+
+## Embodiment: moving, seeing, and answering
+
+- **Seeing.** `vision.snapshot` renders the current view to an image you can actually look at —
+  use it to judge a scene, an outfit, or a build that structured data (`avatars.getNearby`) can't
+  convey. Cheap; default returns inline base64 jpeg.
+- **Moving.** `movement.teleport` takes **exactly one** destination — a landmark item, a global
+  `[x,y,z]`, or a nearby `avatar_id`. It's async and waits up to 60s; a `status:"timeout"` isn't
+  necessarily failure (a slow region), and `status:"failed"` means the sim refused. Get positions
+  from `search.places` or `avatars.getNearby`. `movement.sit`/`stand` wait ~5s and report the
+  actual sitting state.
+- **Answer what's offered to you.** Anything pushed at the avatar — an inventory offer, a teleport
+  offer, a friendship request, a group invite, or a scripted object's **blue-menu (`llDialog`)** —
+  shows up in `notifications.list` as a typed entry with its `buttons`. Press one with
+  `notifications.respond {id, button}` (button by **name**: `Keep`/`Discard`, `Accept`/`Decline`,
+  or a dialog's own label). **This is the only way to answer a blue menu.** A common loop:
+  `object.touch` a vendor/furniture → it opens a menu → `notifications.list` → `notifications.respond`.
+- **Private conversation.** `im.send` DMs an avatar; their replies collect in an always-on buffer
+  you drain with `im.replies` (optionally `wait_seconds` for a quick back-and-forth). `im.getMessages`
+  reads history without clearing the user's unread badge. This is 1:1 — group chat is `group.sendIM`,
+  public chat is `chat.send`.
+
+## Paying L$ is fenced
+
+`money.getBalance` is read-only and always works. `money.pay` **spends real currency** and is
+locked down: it does nothing unless the user has set **`IDMCPMoneyEnabled = 1`** (off by default),
+it's capped by `IDMCPMoneyMaxAmount` (default L$1000), it honours RLV `@pay`/`@buy`, and it checks
+you can afford it. Preview any payment first with `dry_run:true` — it resolves the recipient's name
+and the amount without sending. If a real pay is refused, surface *why* (switch off, over cap,
+RLV, or funds) rather than retrying.
 
 ## Gotchas (learned the hard way)
 
