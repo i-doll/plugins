@@ -13,7 +13,7 @@ Custom fork (`ID` prefix). An in-process MCP server that lets an AI agent drive 
 
 Every mutating or identity-revealing tool passes a single RLV gate. A blocked call returns JSON-RPC error `-32011` with `{restriction, sources:[{object_id,root_id,attach_pt,name}], checkedAt}`. Use `rlv.getRestrictions` to see what's active and `rlv.canDo` to check a call before making it.
 
-**65 tools** across 19 areas.
+**67 tools** across 19 areas.
 
 ## Health
 
@@ -124,11 +124,13 @@ Talk to in-world scripted objects, HUDs, vendors, and **RLV relays** on any chan
 
 ## Movement & world
 
-Embodiment: move the avatar, know where it is, and operate in-world objects. Teleport and sit/stand are async (the tool waits for the result). `object.touch` is fire-and-forget — a resulting blue-menu (`llDialog`) arrives via `notifications.list` / `notifications.respond`, not this tool's result.
+Embodiment: find things around you, move to/among them, know where you are, and operate them. Teleport, sit/stand, and walkTo are async (the tool waits for the result). `object.touch` is fire-and-forget — a resulting blue-menu (`llDialog`) arrives via `notifications.list` / `notifications.respond`, not this tool's result. **`objects.getNearby` is how you get the `object_id`s** the sit/touch/walkTo tools need.
 
 | Tool | Params | Description |
 |---|---|---|
+| `objects.getNearby` | `radius`: number<br>`limit`: integer<br>`scripted_only`: boolean<br>`resolve_names`: boolean | List in-world objects near you (rezzed prims/linksets — seats, vendors, doors, RLV furniture; **not** avatars or attachments). `radius` default 16 (max 64), `limit` default 32 (max 128, closest first), `scripted_only` default false, `resolve_names` default true (quick round-trip; false = immediate, name-less). Returns `{objects:[{object_id, name, distance, position:[x,y,z], scripted}]}`. Feed an `object_id` to `object.touch` / `movement.sit` / `movement.walkTo`. |
 | `movement.teleport` | `landmark_item_id`: string<br>`global_position`: number[3]<br>`avatar_id`: string | Teleport your avatar. Provide **exactly one** destination: a landmark inventory item, a grid-global `[x,y,z]` (from `search.places`/`avatars.getNearby`), or a nearby avatar to go to. Waits up to 60s; returns `{status: "arrived"\|"failed"\|"timeout", region, global_position}`. Blocked by RLV @tplm (landmark) / @tploc / @tplocal. |
+| `movement.walkTo` | `global_position`: number[3]<br>`object_id`: string<br>`avatar_id`: string<br>`stop_distance`: number | Walk on foot to a spot (autopilot / "move to here"). **Exactly one** target: a `[x,y,z]`, an object, or a nearby avatar. Best for short in-region moves (use `movement.teleport` for longer hops). Waits up to 60s → `{status: "arrived"\|"stopped", distance}`. `stop_distance` default 1.5 m. |
 | `movement.sit` | `object_id*`: string | Sit on an in-world object (must be loaded in range). Waits up to 5s → `{sitting, object_id}`. Blocked by RLV @sit. |
 | `movement.stand` | — | Stand up if sitting. Waits up to 5s → `{sitting}`. Blocked by RLV @unsit. |
 | `agent.getLocation` | — | Where you are now: `{region:{name}, position:{global,region}, parcel:{name, owner_id, area, flags, raw_flags}}`. |
@@ -149,7 +151,7 @@ Private person-to-person IM (not public chat, not group chat). Inbound P2P IMs a
 | `im.send` | `avatar_id*`: string<br>`message*`: string | Send a 1:1 IM to an avatar. Returns `{sent, session_id}`. Blocked by RLV @sendim. |
 | `im.replies` | `avatar_id`: string<br>`session_id`: string<br>`wait_seconds`: integer | Read newly-received IMs (optionally filter to one correspondent; omit both for all). `wait_seconds` (max 30) waits for the first if nothing buffered. Returns `{replies:[{from_id, from, text, session_id, time}]}`. |
 | `im.getConversations` | — | List open 1:1 conversations: `{conversations:[{session_id, avatar_id, name, num_unread}]}`. |
-| `im.getMessages` | `avatar_id`: string<br>`session_id`: string<br>`limit`: integer | Read stored history for one conversation (`limit` default 20, newest first). Read-only — does **not** clear the user's unread badge. Returns `{session_id, messages:[{from, from_id, message, timestamp, is_history}]}`. |
+| `im.getMessages` | `avatar_id`: string<br>`session_id`: string<br>`limit`: integer | Read stored history for one conversation (`limit` default 20, newest first). Read-only — does **not** clear the user's unread badge. Returns `{session_id, messages:[{from, from_id, message, time, timestamp, is_history}]}` (`time` is SL's display string; `timestamp` epoch is often 0). |
 
 ## Notifications & offers
 

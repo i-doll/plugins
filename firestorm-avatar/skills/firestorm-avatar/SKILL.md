@@ -35,7 +35,7 @@ root for the written reference. By area:
 | Profile | `profile.get`/`setSelf`, `profile.getPicks`/`getClassifieds`, `people.getNames`, `people.getFriends` | View/edit profiles, read picks & classified ads in full, resolve names, list friends (online + granted rights) |
 | Search | `search.people`/`places`/`groups`/`events`/`land`/`classifieds` | Directory search (headless) |
 | Nearby | `avatars.getNearby`/`getWorn` | Who's around, what they have attached |
-| Movement & world | `movement.teleport`/`sit`/`stand`, `agent.getLocation`, `object.touch` | Go somewhere, sit, know where you are, operate objects |
+| Movement & world | `objects.getNearby`, `movement.teleport`/`walkTo`/`sit`/`stand`, `agent.getLocation`, `object.touch` | Find nearby objects, go somewhere (teleport or walk), sit, know where you are, operate objects |
 | Vision | `vision.snapshot` | Render the current view as an image — the avatar's eyes |
 | IM (1:1) | `im.send`/`replies`/`getConversations`/`getMessages` | Private person-to-person messaging |
 | Notifications | `notifications.list`/`respond` | Answer offers (items/teleport/friendship/group) + blue-menu dialogs |
@@ -98,11 +98,18 @@ appear; say so if nothing matches.
 - **Seeing.** `vision.snapshot` renders the current view to an image you can actually look at —
   use it to judge a scene, an outfit, or a build that structured data (`avatars.getNearby`) can't
   convey. Cheap; default returns inline base64 jpeg.
-- **Moving.** `movement.teleport` takes **exactly one** destination — a landmark item, a global
-  `[x,y,z]`, or a nearby `avatar_id`. It's async and waits up to 60s; a `status:"timeout"` isn't
-  necessarily failure (a slow region), and `status:"failed"` means the sim refused. Get positions
-  from `search.places` or `avatars.getNearby`. `movement.sit`/`stand` wait ~5s and report the
-  actual sitting state.
+- **Finding things to interact with.** `objects.getNearby` lists rezzed in-world objects (seats,
+  vendors, furniture) with their `object_id`, name, and distance — this is how you get the ids that
+  `object.touch`, `movement.sit`, and `movement.walkTo` need. `scripted_only:true` cuts scenery
+  noise down to interactive objects. (It does **not** list avatars — use `avatars.getNearby` for
+  those, and `avatars.getWorn` for a specific avatar's attachment object_ids.)
+- **Moving.** Two ways: `movement.teleport` (instant, any distance — exactly one of a landmark item,
+  a global `[x,y,z]`, or a nearby `avatar_id`; async, up to 60s; `status:"timeout"` may just be a
+  slow region, `"failed"` = sim refused) and `movement.walkTo` (walk on foot — the "move to here"
+  autopilot — to a position/object/avatar; best for short in-region moves; returns
+  `status:"arrived"|"stopped"` + final distance). Get positions from `search.places`,
+  `avatars.getNearby`, or `objects.getNearby`. `movement.sit`/`stand` wait ~5s and report the actual
+  sitting state.
 - **Answer what's offered to you.** Anything pushed at the avatar — an inventory offer, a teleport
   offer, a friendship request, a group invite, or a scripted object's **blue-menu (`llDialog`)** —
   shows up in `notifications.list` as a typed entry with its `buttons`. Press one with
