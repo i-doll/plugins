@@ -120,6 +120,14 @@ appear; say so if nothing matches.
   `avatars.getNearby`, or `objects.getNearby`. `movement.turn` rotates in place without walking
   (a relative `degrees`, +left/−right, or something to face). `movement.sit`/`stand` wait ~5s and
   report the actual sitting state.
+- **Movement takes real time — one move at a time.** `movement.teleport`/`walkTo`/`sit`/`stand`
+  are asynchronous, and each tool call **blocks until the move actually completes** (or times out —
+  up to ~60s for teleport/walk, ~5s for sit/stand), then returns the outcome. So **wait for each
+  call to return before issuing the next move** — don't fire a sequence of moves in quick succession;
+  a new move sent while the avatar is still travelling lands mid-transition and behaves erratically.
+  Always read the returned `status` first: `walkTo` can come back `"stopped"` (blocked / didn't reach
+  the target) rather than `"arrived"`, and teleport can `"timeout"`/`"failed"` — chaining another move
+  on top of that compounds the error. Pattern: *plan → one move → read its result → then the next*.
 - **Firestorm AO.** `ao.getStatus` shows whether the client-side animation overlay is on, the active
   set, and available sets; `ao.setEnabled`, `ao.selectSet {name}`, and `ao.cycle {next|prev}` control it.
 - **Answer what's offered to you.** Anything pushed at the avatar — an inventory offer, a teleport
