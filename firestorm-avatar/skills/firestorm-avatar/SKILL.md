@@ -128,6 +128,10 @@ appear; say so if nothing matches.
   Always read the returned `status` first: `walkTo` can come back `"stopped"` (blocked / didn't reach
   the target) rather than `"arrived"`, and teleport can `"timeout"`/`"failed"` — chaining another move
   on top of that compounds the error. Pattern: *plan → one move → read its result → then the next*.
+  **Never issue movement calls in parallel / the same batch** — the viewer enforces one move at a
+  time: a `teleport`/`walkTo`/`sit`/`stand` sent while another is still running is **rejected**
+  (`-32005 "a movement is already in progress"`). If you get that, wait for the in-flight move to
+  return, then send the next.
 - **Firestorm AO.** `ao.getStatus` shows whether the client-side animation overlay is on, the active
   set, and available sets; `ao.setEnabled`, `ao.selectSet {name}`, and `ao.cycle {next|prev}` control it.
 - **Answer what's offered to you.** Anything pushed at the avatar — an inventory offer, a teleport
