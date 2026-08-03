@@ -13,7 +13,7 @@ Custom fork (`ID` prefix). An in-process MCP server that lets an AI agent drive 
 
 Every mutating or identity-revealing tool passes a single RLV gate. A blocked call returns JSON-RPC error `-32011` with `{restriction, sources:[{object_id,root_id,attach_pt,name}], checkedAt}`. Use `rlv.getRestrictions` to see what's active and `rlv.canDo` to check a call before making it.
 
-**67 tools** across 19 areas.
+**73 tools** across 20 areas.
 
 ## Health
 
@@ -131,16 +131,29 @@ Embodiment: find things around you, move to/among them, know where you are, and 
 | `objects.getNearby` | `radius`: number<br>`limit`: integer<br>`scripted_only`: boolean<br>`resolve_names`: boolean | List in-world objects near you (rezzed prims/linksets — seats, vendors, doors, RLV furniture; **not** avatars or attachments). `radius` default 16 (max 64), `limit` default 32 (max 128, closest first), `scripted_only` default false, `resolve_names` default true (quick round-trip; false = immediate, name-less). Returns `{objects:[{object_id, name, distance, position:[x,y,z], scripted}]}`. Feed an `object_id` to `object.touch` / `movement.sit` / `movement.walkTo`. |
 | `movement.teleport` | `landmark_item_id`: string<br>`global_position`: number[3]<br>`avatar_id`: string | Teleport your avatar. Provide **exactly one** destination: a landmark inventory item, a grid-global `[x,y,z]` (from `search.places`/`avatars.getNearby`), or a nearby avatar to go to. Waits up to 60s; returns `{status: "arrived"\|"failed"\|"timeout", region, global_position}`. Blocked by RLV @tplm (landmark) / @tploc / @tplocal. |
 | `movement.walkTo` | `global_position`: number[3]<br>`object_id`: string<br>`avatar_id`: string<br>`stop_distance`: number | Walk on foot to a spot (autopilot / "move to here"). **Exactly one** target: a `[x,y,z]`, an object, or a nearby avatar. Best for short in-region moves (use `movement.teleport` for longer hops). Waits up to 60s → `{status: "arrived"\|"stopped", distance}`. `stop_distance` default 1.5 m. |
+| `movement.turn` | `degrees`: number<br>`global_position`: number[3]<br>`object_id`: string<br>`avatar_id`: string | Turn in place (no walking). **Exactly one**: `degrees` (relative; +left/CCW, −right), or something to face — a `[x,y,z]`, object, or avatar. Returns `{turned, facing:[x,y,z], heading_deg}` (heading 0=East, 90=North). |
 | `movement.sit` | `object_id*`: string | Sit on an in-world object (must be loaded in range). Waits up to 5s → `{sitting, object_id}`. Blocked by RLV @sit. |
 | `movement.stand` | — | Stand up if sitting. Waits up to 5s → `{sitting}`. Blocked by RLV @unsit. |
 | `agent.getLocation` | — | Where you are now: `{region:{name}, position:{global,region}, parcel:{name, owner_id, area, flags, raw_flags}}`. |
 | `object.touch` | `id*`: string<br>`face`: integer | Touch/click an in-world object (operates vendors, doors, RLV furniture). Fire-and-forget; any resulting blue-menu arrives via `notifications.*`. Blocked by RLV @touchall / @touchworld / @touchthis / @interact. |
+| `hud.click` | `x*`: number<br>`y*`: number | Click a button on one of your worn HUDs by screen coordinate. `x`,`y` are **normalized 0..1 from the top-left**, as you'd read a screenshot — take one with `vision.snapshot {show_hud:true}` to see the buttons, then aim. Only registers a hit on a HUD (use `object.touch` for the world). Returns `{clicked, object_id, face}`. Blocked by RLV @touchhud. |
 
 ## Vision
 
 | Tool | Params | Description |
 |---|---|---|
-| `vision.snapshot` | `width`: integer<br>`height`: integer<br>`hide_ui`: boolean<br>`show_hud`: boolean<br>`format`: jpeg \| png<br>`quality`: integer<br>`to_file`: boolean | Render the current 3D view as an image you can look at — the avatar's eyes. `width` default 1024 (256–2048), `height` from window aspect, `hide_ui` default true, `format` jpeg (default)/png, `quality` (jpeg) default 80. Returns `{format, width, height, image_base64}`, or `{..., path}` with `to_file:true`. No RLV gate (own view). |
+| `vision.snapshot` | `width`: integer<br>`height`: integer<br>`hide_ui`: boolean<br>`show_hud`: boolean<br>`format`: jpeg \| png<br>`quality`: integer<br>`to_file`: boolean | Render the current 3D view as an image you can look at — the avatar's eyes. `width` default 1024 (256–2048), `height` from window aspect, `hide_ui` default true, `format` jpeg (default)/png, `quality` (jpeg) default 80. `show_hud:true` includes your HUD overlays (the viewer UI itself stays hidden) — use it to see HUD buttons before `hud.click`. Returns `{format, width, height, image_base64}`, or `{..., path}` with `to_file:true`. No RLV gate (own view). |
+
+## Animation overlay (AO)
+
+The Firestorm client-side AO — the animations your avatar plays when idle, walking, sitting, etc.
+
+| Tool | Params | Description |
+|---|---|---|
+| `ao.getStatus` | — | `{enabled, stands_enabled, current_set, sets:[names]}`. |
+| `ao.setEnabled` | `enabled*`: boolean | Turn the AO on/off. Returns `{enabled}`. |
+| `ao.selectSet` | `name*`: string | Switch the active AO set by name (see `ao.getStatus`). Returns `{current_set}`. |
+| `ao.cycle` | `direction`: next \| prev | Cycle the current stand to the next/previous animation (default next). Returns `{cycled, direction}`. |
 
 ## Instant messaging (1:1)
 

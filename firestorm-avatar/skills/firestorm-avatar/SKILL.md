@@ -35,8 +35,9 @@ root for the written reference. By area:
 | Profile | `profile.get`/`setSelf`, `profile.getPicks`/`getClassifieds`, `people.getNames`, `people.getFriends` | View/edit profiles, read picks & classified ads in full, resolve names, list friends (online + granted rights) |
 | Search | `search.people`/`places`/`groups`/`events`/`land`/`classifieds` | Directory search (headless) |
 | Nearby | `avatars.getNearby`/`getWorn` | Who's around, what they have attached |
-| Movement & world | `objects.getNearby`, `movement.teleport`/`walkTo`/`sit`/`stand`, `agent.getLocation`, `object.touch` | Find nearby objects, go somewhere (teleport or walk), sit, know where you are, operate objects |
-| Vision | `vision.snapshot` | Render the current view as an image — the avatar's eyes |
+| Movement & world | `objects.getNearby`, `movement.teleport`/`walkTo`/`turn`/`sit`/`stand`, `agent.getLocation`, `object.touch` | Find nearby objects, go somewhere (teleport or walk), turn in place, sit, know where you are, operate objects |
+| Animation (AO) | `ao.getStatus`/`setEnabled`/`selectSet`/`cycle` | Firestorm client-side animation overlay |
+| Vision & HUD | `vision.snapshot`, `hud.click` | See the scene (snapshot; `show_hud:true` includes HUD overlays), click a HUD button by screen coordinate |
 | IM (1:1) | `im.send`/`replies`/`getConversations`/`getMessages` | Private person-to-person messaging |
 | Notifications | `notifications.list`/`respond` | Answer offers (items/teleport/friendship/group) + blue-menu dialogs |
 | Groups | `group.list`/`getInfo`/`activate`/`sendIM`/`getNotices`/`sendNotice` | Group chat + notices |
@@ -97,7 +98,10 @@ appear; say so if nothing matches.
 
 - **Seeing.** `vision.snapshot` renders the current view to an image you can actually look at —
   use it to judge a scene, an outfit, or a build that structured data (`avatars.getNearby`) can't
-  convey. Cheap; default returns inline base64 jpeg.
+  convey. Cheap; default returns inline base64 jpeg. Pass `show_hud:true` to include your HUD
+  overlays (the viewer UI itself stays hidden); then `hud.click {x, y}` presses a HUD button by
+  **normalized 0..1 top-left coordinate** — aim by where the button sits in that screenshot.
+  (`hud.click` only hits HUDs; use `object.touch` for in-world objects.)
 - **Finding things to interact with.** `objects.getNearby` lists rezzed in-world objects (seats,
   vendors, furniture) with their `object_id`, name, and distance — this is how you get the ids that
   `object.touch`, `movement.sit`, and `movement.walkTo` need. `scripted_only:true` cuts scenery
@@ -108,8 +112,11 @@ appear; say so if nothing matches.
   slow region, `"failed"` = sim refused) and `movement.walkTo` (walk on foot — the "move to here"
   autopilot — to a position/object/avatar; best for short in-region moves; returns
   `status:"arrived"|"stopped"` + final distance). Get positions from `search.places`,
-  `avatars.getNearby`, or `objects.getNearby`. `movement.sit`/`stand` wait ~5s and report the actual
-  sitting state.
+  `avatars.getNearby`, or `objects.getNearby`. `movement.turn` rotates in place without walking
+  (a relative `degrees`, +left/−right, or something to face). `movement.sit`/`stand` wait ~5s and
+  report the actual sitting state.
+- **Firestorm AO.** `ao.getStatus` shows whether the client-side animation overlay is on, the active
+  set, and available sets; `ao.setEnabled`, `ao.selectSet {name}`, and `ao.cycle {next|prev}` control it.
 - **Answer what's offered to you.** Anything pushed at the avatar — an inventory offer, a teleport
   offer, a friendship request, a group invite, or a scripted object's **blue-menu (`llDialog`)** —
   shows up in `notifications.list` as a typed entry with its `buttons`. Press one with
