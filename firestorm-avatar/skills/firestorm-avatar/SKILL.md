@@ -115,7 +115,8 @@ appear; say so if nothing matches.
 - **Moving.** Two ways: `movement.teleport` (instant, any distance — exactly one of a landmark item,
   a global `[x,y,z]`, or a nearby `avatar_id`; async, up to 60s; `status:"timeout"` may just be a
   slow region, `"failed"` = sim refused) and `movement.walkTo` (walk on foot — the "move to here"
-  autopilot — to a position/object/avatar; best for short in-region moves; returns
+  autopilot — to a position/object/avatar; best for short in-region moves; **stays on foot, never
+  flies** even for far/high targets unless you pass `fly:true`; returns
   `status:"arrived"|"stopped"` + final distance). Get positions from `search.places`,
   `avatars.getNearby`, or `objects.getNearby`. `movement.turn` rotates in place without walking
   (a relative `degrees`, +left/−right, or something to face). `movement.sit`/`stand` wait ~5s and
