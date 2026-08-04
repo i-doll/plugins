@@ -140,6 +140,10 @@ appear; say so if nothing matches.
   `notifications.respond {id, button}` (button by **name**: `Keep`/`Discard`, `Accept`/`Decline`,
   or a dialog's own label). **This is the only way to answer a blue menu.** A common loop:
   `object.touch` a vendor/furniture → it opens a menu → `notifications.list` → `notifications.respond`.
+  To **clear** a notification you don't need to act on — a `group_notice`, an info toast — use
+  `notifications.dismiss {id}` (omit `id` to clear all). It does **not** press any button, so it
+  never accepts/declines an offer or keeps/discards an attachment; only use `respond` when you
+  actually want to act. Prefer `dismiss` for group notices; `respond` for real offers/dialogs.
 - **Private conversation.** `im.send` DMs an avatar; their replies collect in an always-on buffer
   you drain with `im.replies` (optionally `wait_seconds` for a quick back-and-forth). `im.getMessages`
   reads history without clearing the user's unread badge. This is 1:1 — group chat is `group.sendIM`,

@@ -13,7 +13,7 @@ Custom fork (`ID` prefix). An in-process MCP server that lets an AI agent drive 
 
 Every mutating or identity-revealing tool passes a single RLV gate. A blocked call returns JSON-RPC error `-32011` with `{restriction, sources:[{object_id,root_id,attach_pt,name}], checkedAt}`. Use `rlv.getRestrictions` to see what's active and `rlv.canDo` to check a call before making it.
 
-**73 tools** across 20 areas.
+**74 tools** across 20 areas.
 
 ## Health
 
@@ -174,6 +174,7 @@ One generic pair answers everything pushed at the avatar — inventory offers, t
 |---|---|---|
 | `notifications.list` | — | List pending notifications: `{id, name, type (offer_inventory\|offer_teleport\|offer_friendship\|invite_group\|script_dialog\|other), message, buttons:[names], payload}`. |
 | `notifications.respond` | `id*`: string<br>`button*`: string | Press a button on a pending notification by **name** (e.g. `Keep`/`Discard` for an item offer, `Accept`/`Decline`, or a blue-menu label). Returns `{responded, button}`. Script-dialog presses enforce RLV @sendchat / @sendchannel. |
+| `notifications.dismiss` | `id`: string | Clear a notification **without answering it** — no button is pressed, so an offer isn't accepted/declined and an attached item isn't kept/discarded. `id` dismisses one; **omit `id` to dismiss all**. Use this to clear things you only need gone (group notices `group_notice`, info toasts); use `notifications.respond` to actually act on an offer. Returns `{dismissed:<count>}`. |
 
 ## Groups
 
