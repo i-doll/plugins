@@ -268,7 +268,8 @@ that a developer who has read nothing else can ship it.
   `docs/`). You never create or edit code, and you never commit — leave
   files for the user to review and commit.
 - Bash is for `gh` (issues, labels, PR reading) and read-only git
-  (`log`, `diff`, `show`). Nothing that mutates the repo.
+  (`log`, `diff`, `show`). Nothing that mutates the local working tree or
+  git state.
 - Output lands in the conversation by default; write a repo doc or tracker
   items only when the invocation says so (Cut always writes to the queue).
 - Before **any** queue operation — cutting items, answering on an item,
@@ -363,7 +364,9 @@ When told to work the queue autonomously:
 - Ambiguous item → ask the product owner: SendMessage to `product-owner` if
   one is running, and record the question on the item either way. No answer →
   mark blocked, move on.
-- Empty queue → report back asking for more work. **Never invent scope.**
+- Empty queue → SendMessage to `product-owner` if one is running and work
+  whatever it cuts; otherwise report back asking for more work. **Never
+  invent scope.**
 - Blocked item (unfixable test, contradictory criteria, missing dependency)
   → record the concrete blocker, move to the next ready item.
 - A signing failure is not that kind of blocker: it halts the whole run.
@@ -428,8 +431,9 @@ each other.
   commits, branch pushed, PR opened. Works a single task or drains the queue
   autonomously. Never merges its own PRs.
 - **`skills/work-queue/`** — the shared handoff contract: queue selection
-  (GitHub issues when `gh` is authenticated, session tasks otherwise), item
-  shape, ready/blocked markers, claim discipline, definition of done.
+  (GitHub issues when the origin is on GitHub and `gh` is authenticated,
+  session tasks otherwise), item shape, ready/blocked markers, claim
+  discipline, definition of done.
 
 ## Usage
 
