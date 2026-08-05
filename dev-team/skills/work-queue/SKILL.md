@@ -30,6 +30,8 @@ never silent — say why (no remote / no auth).
 - **Priority:** P1 (now) / P2 (next) / P3 (later).
 - **Ready marker:** only the product owner sets it; developers only claim
   items that carry it.
+- **Untriaged defects:** defect items filed by QA carry no ready marker and
+  no priority until the product owner triages them.
 
 **Tracker mode:** the body holds Context / Acceptance criteria / Non-goals as
 sections; priority is a `P1`/`P2`/`P3` label; ready is the `dev-ready` label;
