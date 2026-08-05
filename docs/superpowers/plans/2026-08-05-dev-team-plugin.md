@@ -202,7 +202,7 @@ Expected: `Good "git" signature`.
 - Create: `dev-team/agents/product-owner.md`
 
 **Interfaces:**
-- Consumes: skill `dev-team:work-queue` (Task 2) — invoked via the Skill tool in Cut mode.
+- Consumes: skill `dev-team:work-queue` (Task 2) — invoked via the Skill tool before any queue operation.
 - Produces: agent `product-owner` — referenced by name in the senior-developer's prompt (Task 4) and the README (Task 5).
 
 - [ ] **Step 1: Write the agent definition**
