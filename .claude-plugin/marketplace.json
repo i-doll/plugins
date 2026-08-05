@@ -15,6 +15,11 @@
       "name": "mpsearch",
       "source": "./mpsearch",
       "description": "Search the Second Life Marketplace — listings, copy/modify/transfer permissions, reviews, creator stores and the category tree. Bundles a dependency-free MCP server, the marketplace-search skill, and a session-capture command."
+    },
+    {
+      "name": "dev-team",
+      "source": "./dev-team",
+      "description": "Reusable role agents — a product owner (shape, guard, cut) and an autonomous senior developer (ship-ready: verified, signed, pushed, PR) — sharing the work-queue handoff protocol so they can be called solo or chained into an autonomous loop."
     }
   ]
 }
