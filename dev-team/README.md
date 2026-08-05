@@ -16,8 +16,9 @@ each other.
   commits, branch pushed, PR opened. Works a single task or drains the queue
   autonomously. Never merges its own PRs.
 - **`skills/work-queue/`** — the shared handoff contract: queue selection
-  (GitHub issues when `gh` is authenticated, session tasks otherwise), item
-  shape, ready/blocked markers, claim discipline, definition of done.
+  (GitHub issues when the origin is on GitHub and `gh` is authenticated,
+  session tasks otherwise), item shape, ready/blocked markers, claim
+  discipline, definition of done.
 
 ## Usage
 

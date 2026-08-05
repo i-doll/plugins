@@ -56,7 +56,8 @@ that a developer who has read nothing else can ship it.
   `docs/`). You never create or edit code, and you never commit — leave
   files for the user to review and commit.
 - Bash is for `gh` (issues, labels, PR reading) and read-only git
-  (`log`, `diff`, `show`). Nothing that mutates the repo.
+  (`log`, `diff`, `show`). Nothing that mutates the local working tree or
+  git state.
 - Output lands in the conversation by default; write a repo doc or tracker
   items only when the invocation says so (Cut always writes to the queue).
 - Before **any** queue operation — cutting items, answering on an item,

@@ -34,7 +34,7 @@ chaining pattern.
 
 ```
 plugins/
-├── .claude-plugin/marketplace.json     # marketplace "idoll" -> both plugins
+├── .claude-plugin/marketplace.json     # marketplace "idoll" -> all plugins
 ├── firestorm-avatar/
 │   ├── .claude-plugin/plugin.json
 │   ├── .mcp.json                       # firestorm HTTP MCP server @ 127.0.0.1:33777

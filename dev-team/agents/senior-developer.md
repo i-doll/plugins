@@ -51,7 +51,9 @@ When told to work the queue autonomously:
 - Ambiguous item → ask the product owner: SendMessage to `product-owner` if
   one is running, and record the question on the item either way. No answer →
   mark blocked, move on.
-- Empty queue → report back asking for more work. **Never invent scope.**
+- Empty queue → SendMessage to `product-owner` if one is running and work
+  whatever it cuts; otherwise report back asking for more work. **Never
+  invent scope.**
 - Blocked item (unfixable test, contradictory criteria, missing dependency)
   → record the concrete blocker, move to the next ready item.
 - A signing failure is not that kind of blocker: it halts the whole run.
