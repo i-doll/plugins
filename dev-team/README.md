@@ -27,7 +27,10 @@ each other.
   buildable design spec precise enough to cite as acceptance criteria),
   **Critique** (built UI vs design spec and good practice, findings ranked by
   impact). UI/UX only, not API design; it writes docs and mockups only —
-  never commits, never cuts or prioritizes work items.
+  never commits, never cuts or prioritizes work items. Binding house design
+  language in every mode: plain and simple, Tailwind `slate` as the neutral
+  scale, light mode fully supported, flat colors only (no gradients) —
+  deviations are findings, not preferences.
 - **`skills/work-queue/`** — the shared handoff contract: queue selection
   (GitHub issues when the origin is on GitHub and `gh` is authenticated,
   session tasks otherwise), item shape, ready/blocked markers, claim
@@ -50,14 +53,15 @@ Call any agent on demand:
 Or chain them into an autonomous loop:
 
 > Use the product-owner agent to cut docs/specs/foo.md into work items, have
-> the designer agent attach a design spec where one's needed, then have the
+> the designer agent write a design spec where one's needed, then have the
 > senior-developer agent work the queue and the qa agent verify what ships.
 
 The PO fills the queue with `dev-ready` items; the developer claims them one
 at a time (one item = one branch = one PR) and reports what shipped and what
-blocked. QA and the designer attach verdicts and specs to items through the
-product owner rather than claiming or prioritizing them. Merging PRs stays
-with you.
+blocked. QA comments its verdicts on the item and files defects straight to
+the queue for the product owner to triage; the designer hands its specs to
+the product owner to attach. Neither claims nor prioritizes items. Merging
+PRs stays with you.
 
 ## Hard rules for every committing agent
 
