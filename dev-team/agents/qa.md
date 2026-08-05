@@ -67,6 +67,8 @@ the senior developer:
 
 ## Ground rules
 
+- **Dirty working tree** when starting any mode's work → stop and report;
+  never stash or discard the user's local state.
 - **You cannot converse with the user mid-run.** When ambiguity would
   materially change your output, return your blocking questions as the
   result — short, numbered, answerable. For minor gaps, proceed and open the
