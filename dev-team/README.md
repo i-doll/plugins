@@ -1,7 +1,7 @@
 # dev-team (Claude Code plugin)
 
 Reusable role agents you call on demand and chain as needed. No MCP server,
-no commands — just two agents and the protocol that lets them hand work to
+no commands — just four agents and the protocol that lets them hand work to
 each other.
 
 ## What's in here
@@ -15,6 +15,19 @@ each other.
   test-first, lint + typecheck + full suite green, **signed** conventional
   commits, branch pushed, PR opened. Works a single task or drains the queue
   autonomously. Never merges its own PRs.
+- **`agents/qa.md`** — three modes: **Verify** (independently check a
+  PR/branch against its work item's acceptance criteria, pass/fail verdict
+  with evidence), **Plan** (spec → test plan and edge-case inventory before
+  implementation), **Break** (adversarial exploration of shipped work,
+  reproducible defects filed to the queue). Tests are the only code it
+  writes; it never fixes production code, never merges, and defects it files
+  go to the product owner untriaged.
+- **`agents/designer.md`** — three modes: **Explore** (feature idea/spec →
+  2–3 genuinely different design directions), **Refine** (chosen direction →
+  buildable design spec precise enough to cite as acceptance criteria),
+  **Critique** (built UI vs design spec and good practice, findings ranked by
+  impact). UI/UX only, not API design; it writes docs and mockups only —
+  never commits, never cuts or prioritizes work items.
 - **`skills/work-queue/`** — the shared handoff contract: queue selection
   (GitHub issues when the origin is on GitHub and `gh` is authenticated,
   session tasks otherwise), item shape, ready/blocked markers, claim
@@ -22,22 +35,34 @@ each other.
 
 ## Usage
 
-Call either agent on demand:
+Call any agent on demand:
 
 > Use the product-owner agent to shape this into a spec: …
 >
 > Use the senior-developer agent to fix the flaky retry test and open a PR.
+>
+> Use the qa agent to verify PR #42 against its work item and give a
+> pass/fail verdict.
+>
+> Use the designer agent to explore 2–3 directions for the new settings
+> screen.
 
 Or chain them into an autonomous loop:
 
-> Use the product-owner agent to cut docs/specs/foo.md into work items,
-> then have the senior-developer agent work the queue.
+> Use the product-owner agent to cut docs/specs/foo.md into work items, have
+> the designer agent attach a design spec where one's needed, then have the
+> senior-developer agent work the queue and the qa agent verify what ships.
 
 The PO fills the queue with `dev-ready` items; the developer claims them one
 at a time (one item = one branch = one PR) and reports what shipped and what
-blocked. Merging PRs stays with you.
+blocked. QA and the designer attach verdicts and specs to items through the
+product owner rather than claiming or prioritizing them. Merging PRs stays
+with you.
 
-## Hard rules baked into the developer
+## Hard rules for every committing agent
+
+The senior developer and QA (in Verify mode, for the tests it adds) are the
+only agents that commit, and both are bound by the same rules:
 
 - All commits signed — a signing failure blocks the item, never a fallback
   to unsigned.
@@ -47,5 +72,5 @@ blocked. Merging PRs stays with you.
 
 ## Adding more roles
 
-New agents (QA, designer, …) should follow `skills/work-queue/SKILL.md` for
-anything queue-shaped; that contract is the extension point.
+New agents should follow `skills/work-queue/SKILL.md` for anything
+queue-shaped; that contract is the extension point.

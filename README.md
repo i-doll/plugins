@@ -6,7 +6,7 @@
 |---|---|
 | **`firestorm-avatar`** | Skills + MCP connection for driving a Second Life avatar through the embedded Firestorm MCP server. |
 | **`mpsearch`** | Skills + a bundled MCP server for searching the Second Life Marketplace: listings, permissions, reviews, stores, categories. |
-| **`dev-team`** | Reusable role agents — product owner + autonomous senior developer — sharing a work-queue handoff protocol. |
+| **`dev-team`** | Reusable role agents — product owner, autonomous senior developer, QA, and designer — sharing a work-queue handoff protocol. |
 
 This repo is both the marketplace (`.claude-plugin/marketplace.json`) and the plugins themselves.
 
@@ -50,7 +50,7 @@ plugins/
 │   └── README.md
 └── dev-team/
     ├── .claude-plugin/plugin.json
-    ├── agents/{product-owner,senior-developer}.md
+    ├── agents/{designer,product-owner,qa,senior-developer}.md
     ├── skills/work-queue/SKILL.md
     └── README.md
 ```
