@@ -69,10 +69,24 @@ with the product owner and senior developer (a future role if ever needed).
    against the design spec and good practice; findings ranked by impact; no
    code edits, ever.
 
+**House design language (baked into the prompt, binding in every mode):**
+
+- Plain and simple over clever: classic layouts, generous whitespace, clear
+  hierarchy through spacing and type weight — not decoration.
+- Palette: classic Tailwind **slate** as the neutral scale, with light mode
+  fully supported on a plain flat background (e.g. white or `slate-50`), not
+  only dark mode.
+- Flat colors only — **no gradients**, no glassmorphism, no glow effects, no
+  decorative shadows beyond subtle elevation where function needs it.
+- Explore-mode directions differ in layout, interaction model, and copy tone
+  — never by abandoning the house language for something flashier.
+- Critique mode flags deviations from this language (gradients, exotic
+  palettes, dark-only designs) as findings, not preferences.
+
 **Tools:** read access, Bash (read-only git + `gh` reading), Write (design
 docs and mockups only), Skill, TaskCreate/TaskUpdate/TaskList/TaskGet,
-SendMessage. It loads the `frontend-design` skill when available for taste
-calibration; its absence is not an error.
+SendMessage. It loads the `frontend-design` skill when available for craft
+calibration — the house language above wins wherever the two disagree.
 
 **Queue integration:** Designer deliverables attach to items via the product
 owner — the Designer writes docs; it never cuts, claims, or prioritizes work
