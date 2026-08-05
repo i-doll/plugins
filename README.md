@@ -6,6 +6,7 @@
 |---|---|
 | **`firestorm-avatar`** | Skills + MCP connection for driving a Second Life avatar through the embedded Firestorm MCP server. |
 | **`mpsearch`** | Skills + a bundled MCP server for searching the Second Life Marketplace: listings, permissions, reviews, stores, categories. |
+| **`dev-team`** | Reusable role agents — product owner + autonomous senior developer — sharing a work-queue handoff protocol. |
 
 This repo is both the marketplace (`.claude-plugin/marketplace.json`) and the plugins themselves.
 
@@ -15,6 +16,7 @@ This repo is both the marketplace (`.claude-plugin/marketplace.json`) and the pl
 claude plugin marketplace add i-doll/plugins        # or ~/Work/plugins for a local checkout
 claude plugin install firestorm-avatar@idoll
 claude plugin install mpsearch@idoll
+claude plugin install dev-team@idoll
 ```
 
 See [`firestorm-avatar/README.md`](firestorm-avatar/README.md) for the viewer-side requirements
@@ -24,6 +26,9 @@ hand-added skills/MCP entries.
 See [`mpsearch/README.md`](mpsearch/README.md) for how to connect a Second Life session — Adult
 and Moderate listings, and reviews, are invisible without one — and how to rebuild its bundled
 server from source.
+
+See [`dev-team/README.md`](dev-team/README.md) for the agent roles and the fill-queue/drain-queue
+chaining pattern.
 
 ## Layout
 
@@ -36,12 +41,17 @@ plugins/
 │   ├── skills/{firestorm-avatar,firestorm-chat,firestorm-rlv-relay}/SKILL.md
 │   ├── MCP_TOOLS.md                    # tool reference snapshot
 │   └── README.md
-└── mpsearch/
+├── mpsearch/
+│   ├── .claude-plugin/plugin.json
+│   ├── .mcp.json                       # mpsearch stdio MCP server (node dist/mcp.js)
+│   ├── dist/{mcp,cli}.js               # dependency-free bundles, built from the mpsearch repo
+│   ├── skills/marketplace-search/SKILL.md
+│   ├── commands/auth.md                # /mpsearch:auth — connect a Second Life session
+│   └── README.md
+└── dev-team/
     ├── .claude-plugin/plugin.json
-    ├── .mcp.json                       # mpsearch stdio MCP server (node dist/mcp.js)
-    ├── dist/{mcp,cli}.js               # dependency-free bundles, built from the mpsearch repo
-    ├── skills/marketplace-search/SKILL.md
-    ├── commands/auth.md                # /mpsearch:auth — connect a Second Life session
+    ├── agents/{product-owner,senior-developer}.md
+    ├── skills/work-queue/SKILL.md
     └── README.md
 ```
 
