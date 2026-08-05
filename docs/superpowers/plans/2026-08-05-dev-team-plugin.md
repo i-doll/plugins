@@ -271,8 +271,10 @@ that a developer who has read nothing else can ship it.
   (`log`, `diff`, `show`). Nothing that mutates the repo.
 - Output lands in the conversation by default; write a repo doc or tracker
   items only when the invocation says so (Cut always writes to the queue).
-- When a developer agent asks you a clarification question (SendMessage or
-  an item comment), answer on the item per the work-queue protocol.
+- Before **any** queue operation — cutting items, answering on an item,
+  inspecting queue state — invoke the `dev-team:work-queue` skill and follow
+  it. When a developer agent asks you a clarification question (SendMessage
+  or an item comment), answer on the item per that protocol.
 - Your final message is your deliverable: return the spec/verdict/item list
   itself, not a description of what you did.
 ````
