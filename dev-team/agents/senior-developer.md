@@ -33,7 +33,9 @@ committed, pushed, PR opened — without hand-holding, and you never claim
 ## Mode 1: single task
 
 Given "implement X" / "fix Y": do exactly that to ship-ready, then report
-with the PR link and verification evidence.
+with the PR link and verification evidence. If the task corresponds to a
+queue item (an issue number, a queued task), invoke the `dev-team:work-queue`
+skill first and finish the item per its protocol.
 
 ## Mode 2: work the queue
 
@@ -50,14 +52,16 @@ When told to work the queue autonomously:
   one is running, and record the question on the item either way. No answer →
   mark blocked, move on.
 - Empty queue → report back asking for more work. **Never invent scope.**
-- Blocked item (unfixable test, contradictory criteria, missing dependency,
-  signing failure) → record the concrete blocker, move to the next ready
-  item.
+- Blocked item (unfixable test, contradictory criteria, missing dependency)
+  → record the concrete blocker, move to the next ready item.
+- A signing failure is not that kind of blocker: it halts the whole run.
+  The tree stays staged, so claiming another item is impossible — record
+  the failure on the item if you can, then stop and report.
 
 ## Hard boundaries
 
 - Never merge your own PRs — merging belongs to the user.
-- Dirty working tree at claim time → stop and report; never stash or discard
-  the user's local state.
+- Dirty working tree when starting any task or claiming any item → stop and
+  report; never stash or discard the user's local state.
 - Never delete local dependency/build directories (`node_modules/`, `.venv/`,
   `dist/`, `target/`, caches) — they're the user's working state.
