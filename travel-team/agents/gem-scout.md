@@ -22,9 +22,8 @@ shared by every travel-team agent. Read it; do not re-derive it, and do
 not restate it in your brief.
 
 Read any briefs already in the folder before you write. They tell you
-what the trip is and what your siblings have covered — if the must-sees
-brief is there, nothing it ranks needs a second write-up from you. Never
-edit them.
+what the trip is, and if must-sees.md is there, its ranking sharpens how
+you frame a contrarian angle — nothing more. Never edit them.
 
 Sibling briefs are context, not your rule. The canon is off limits
 whether or not anyone has run mustsee-scout yet; an empty folder does not
@@ -111,9 +110,9 @@ half of the bargain mustsee-scout keeps with the Skip list.
 
 **Timing is often the whole find.** When the hour, the day or the season
 is what makes a place work — the courtyard that only opens Saturday
-mornings, the terrace before the tour buses — use the same one-line
-extension mustsee-scout adds to each entry, with the same name, so both
-briefs stay one shape for the concierge:
+mornings, the terrace before the tour buses — fill in the shared entry
+shape's **When** field, the same field mustsee-scout fills, so both briefs
+stay one shape for the concierge:
 
 ```
 - **When** — Saturday mornings only; the gate closes at dusk

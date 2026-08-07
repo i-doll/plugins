@@ -23,9 +23,10 @@ every travel-team agent. Read it; do not re-derive it, and do not restate
 it in your brief.
 
 Read any briefs already in the folder before you write. They tell you what
-the trip is and what your siblings have already covered — a place
-gem-scout has taken as a contrarian angle does not need your ranking too.
-Never edit them.
+the trip is, but they do not change what you owe the folder — the canon is
+always fully ranked in must-sees.md, whether or not gem-scout has already
+taken a place as a contrarian angle. Sibling briefs are context for your
+research, not a reason to leave a canon entry out. Never edit them.
 
 ## How to research
 
@@ -66,8 +67,8 @@ their own priorities only if they can see yours.
 
 **Every entry carries when to go and how long it really takes.** The time
 is the honest figure for the hour you are recommending, not the number on
-the attraction's own "plan your visit" page. On top of the shared entry
-shape, add one line of your own to each entry:
+the attraction's own "plan your visit" page. Fill in the shared entry
+shape's **When** field for every entry:
 
 ```
 - **When** — first entry at 09:00 or after 16:30; Sundays are worst
