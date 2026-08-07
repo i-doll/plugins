@@ -1,7 +1,7 @@
 # dev-team (Claude Code plugin)
 
 Reusable role agents you call on demand and chain as needed. No MCP server,
-no commands — just four agents and the protocol that lets them hand work to
+no commands — just five agents and the protocol that lets them hand work to
 each other.
 
 ## What's in here
@@ -31,6 +31,12 @@ each other.
   language in every mode: plain and simple, Tailwind `slate` as the neutral
   scale, light mode fully supported, flat colors only (no gradients) —
   deviations are findings, not preferences.
+- **`agents/changelog.md`** — three modes: **Cut** (ref range + version →
+  that release's entry), **Curate** (merged change or completed item → one
+  entry under Unreleased, or a reasoned refusal), **Review** (entry plus its
+  diff → ranked findings on slop, inaccuracy, and misses). Changelog files
+  only, never code or other docs; every entry grounded in the diff; never
+  tags, publishes, or decides version numbers.
 - **`skills/work-queue/`** — the shared handoff contract: queue selection
   (GitHub issues when the origin is on GitHub and `gh` is authenticated,
   session tasks otherwise), item shape, ready/blocked markers, claim
@@ -49,6 +55,9 @@ Call any agent on demand:
 >
 > Use the designer agent to explore 2–3 directions for the new settings
 > screen.
+>
+> Use the changelog agent to cut the 0.3.0 release entry from last tag to
+> HEAD.
 
 Or chain them into an autonomous loop:
 
@@ -60,13 +69,16 @@ The PO fills the queue with `dev-ready` items; the developer claims them one
 at a time (one item = one branch = one PR) and reports what shipped and what
 blocked. QA comments its verdicts on the item and files defects straight to
 the queue for the product owner to triage; the designer hands its specs to
-the product owner to attach. Neither claims nor prioritizes items. Merging
-PRs stays with you.
+the product owner to attach. Neither claims nor prioritizes items. The
+changelog agent works from a completed item or a merged change to cut or
+curate an entry, committing that edit itself — but like QA and the designer,
+it neither claims nor prioritizes items. Merging PRs stays with you.
 
 ## Hard rules for every committing agent
 
-The senior developer and QA (in Verify mode, for the tests it adds) are the
-only agents that commit, and both are bound by the same rules:
+The senior developer, QA (in Verify mode, for the tests it adds), and the
+changelog agent (for its own changelog edits) are the only agents that
+commit, and all three are bound by the same rules:
 
 - All commits signed — a signing failure blocks the item, never a fallback
   to unsigned.
