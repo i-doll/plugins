@@ -19,7 +19,7 @@
     {
       "name": "dev-team",
       "source": "./dev-team",
-      "description": "Reusable role agents — a product owner (shape, guard, cut), an autonomous senior developer (ship-ready: verified, signed, pushed, PR), a QA verifier (verify, plan, break), and a designer (explore, refine, critique) — sharing the work-queue handoff protocol so they can be called solo or chained into an autonomous loop."
+      "description": "Reusable role agents — a product owner (shape, guard, cut), an autonomous senior developer (ship-ready: verified, signed, pushed, PR), a QA verifier (verify, plan, break), a designer (explore, refine, critique), and a changelog editor (cut, curate, review) — sharing the work-queue handoff protocol so they can be called solo or chained into an autonomous loop."
     }
   ]
 }
