@@ -85,9 +85,10 @@ gap in the dossier, not an error.
 
 ## Requirements
 
-All five agents research over the web at runtime (`WebSearch`, `WebFetch`)
-— there's no offline mode. If web access isn't available, an agent says so
-and stops rather than falling back to memory.
+The four specialists research over the web at runtime (`WebSearch`,
+`WebFetch`) — there's no offline mode. The concierge does no research of
+its own; it merges what is already in the folder. If web access isn't
+available, an agent says so and stops rather than falling back to memory.
 
 ## Hard rules for every agent
 
