@@ -1,0 +1,11 @@
+{
+  "name": "travel-team",
+  "displayName": "Travel Team Agents",
+  "description": "Five travel-planning role agents you can invoke on demand and chain: a gem-scout (locals-only, off-path finds), a mustsee-scout (the popular-but-worth-it canon, plus an honest skip list), a bookings agent (what sells out and how far ahead it really books), a food agent (street food to book-ahead tables, grouped by neighborhood), and a concierge (merges whatever briefs exist into one dossier). All five follow the shared trip-dossier skill — one folder per trip, one brief per specialist, sourced research or nothing — so their outputs compose into a loose menu of a trip rather than an hour-by-hour itinerary.",
+  "version": "0.1.0",
+  "author": {
+    "name": "i-doll",
+    "url": "https://github.com/i-doll"
+  },
+  "keywords": ["agents", "travel", "trip-planning", "itinerary", "bookings", "food", "research"]
+}
