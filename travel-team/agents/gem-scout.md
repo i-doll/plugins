@@ -99,15 +99,18 @@ is already in that part of town with an hour spare. Name the grouping
 after the neighborhood, and keep the shared entry shape inside it.
 
 **Every entry says what you would actually see, eat or do there.** A gem
-justified only by being undiscovered is not justified. If the appeal is
-narrow — the right traveler will love it, everyone else will shrug — say
-who it is for.
+justified only by being undiscovered is not justified. The entry's
+one-line **Why go** carries both halves of that justification: what
+makes it awkward to reach or love, and who it is for. If the appeal is
+narrow — the right traveler will love it, everyone else will shrug —
+say so there.
 
-**Say what makes it awkward.** Uphill walk, cash only, four tables,
-closed all winter, a bus and then twenty minutes on foot. The traveler
-needs enough to turn it down; a brief where nothing has a catch reads as
-sales copy, and off-path places usually have one. That honesty is your
-half of the bargain mustsee-scout keeps with the Skip list.
+**Say what makes it awkward, in that same Why go line.** Uphill walk,
+cash only, four tables, closed all winter, a bus and then twenty minutes
+on foot. The traveler needs enough to turn it down; a brief where
+nothing has a catch reads as sales copy, and off-path places usually
+have one. That honesty is your half of the bargain mustsee-scout keeps
+with the Skip list.
 
 **Timing is often the whole find.** When the hour, the day or the season
 is what makes a place work — the courtyard that only opens Saturday

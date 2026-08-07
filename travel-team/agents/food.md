@@ -89,7 +89,7 @@ earns it, say that plainly instead of promoting the third-best dinner —
 and a destination whose best eating is a market counter is a finding, not
 a gap.
 
-**The price band rides in that same line.** Street food to book-ahead
+**The price band rides in that same Why go line.** Street food to book-ahead
 tables is a range the traveler navigates by cost, so an entry that hides
 what it costs is not usable, and a band is cheap to carry — "the tripe,
 six euros standing up" is still one line and now places the room

@@ -74,10 +74,10 @@ Dropping the section instead would hide the gap, which is the one thing
 a traveler reading a tidy-looking dossier would never notice.
 
 **Entries carry the contract's shared shape through the merge unchanged**
-— including the `When` line, which is the field the traveler acts on most
-and the easiest one to lose while tidying. You are moving entries, not
-rewriting them. No re-ranking, no re-wording, no trimming a `Why go` you
-find long, no promoting an entry you liked.
+— including the `When` line when present, which is the field the
+traveler acts on most and the easiest one to lose while tidying. You
+are moving entries, not rewriting them. No re-ranking, no re-wording,
+no trimming a `Why go` you find long, no promoting an entry you liked.
 
 ### Must-sees
 

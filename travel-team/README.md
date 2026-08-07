@@ -30,10 +30,11 @@ invocable à la carte, sharing one contract skill so their outputs compose.
   ahead in high season"). Writes `bookings.md`. Never makes a booking.
 - **`agents/food.md`** — where to eat across the whole range, from the
   three-stool counter to the table worth planning an evening around,
-  grouped by neighborhood and then by occasion. Names one splurge and its
-  price band at the top of the file. Marks tables that need a reservation
-  with the booking flag and **leaves the timing to bookings** — food says
-  what's worth eating, bookings says when to act. Writes `food.md`.
+  grouped by neighborhood and then by occasion. Every entry's Why-go line
+  carries a price band; one splurge is named at the top of the file.
+  Marks tables that need a reservation with the booking flag and
+  **leaves the timing to bookings** — food says what's worth eating,
+  bookings says when to act. Writes `food.md`.
 - **`agents/concierge.md`** — synthesis only; the one agent that does no
   research of its own. Merges whatever briefs exist in the trip folder into
   `dossier.md` (Must-sees, Hidden gems, Eat, Book-ahead timeline, Practical

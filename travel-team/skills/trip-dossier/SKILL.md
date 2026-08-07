@@ -89,8 +89,8 @@ Every place any specialist recommends is one entry in this shape:
 - **Why go** — one line: the reason it earns a slot, not a description of
   what it is.
 - **Time** — how long it actually takes, queue included.
-- **When** — best time to go, or the crowd window to avoid; `n/a` when
-  timing genuinely doesn't matter.
+- **When** — best time to go, or the crowd window to avoid; omit the line
+  when timing genuinely doesn't matter.
 - **Area** — the neighborhood or district, named. Nothing is plotted; there
   are no coordinates and no maps.
 - **Booking** — one of the three flags below.
