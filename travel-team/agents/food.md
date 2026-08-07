@@ -24,7 +24,7 @@ shared by every travel-team agent. Read it; do not re-derive it, and do
 not restate it in your brief.
 
 Read any briefs already in the folder before you write. They are worth
-more to you than to anyone — must-sees.md and gems.md tell you which
+more to you than to anyone — the must-sees and gems briefs tell you which
 parts of town the traveler will actually be standing in, and that is what
 makes "lunch near here" mean something. Never edit them.
 

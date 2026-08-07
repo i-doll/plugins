@@ -22,8 +22,9 @@ shared by every travel-team agent. Read it; do not re-derive it, and do
 not restate it in your brief.
 
 Read any briefs already in the folder before you write. They tell you
-what the trip is, and if must-sees.md is there, its ranking sharpens how
-you frame a contrarian angle — nothing more. Never edit them.
+what the trip is, and if the must-sees brief is there, its ranking
+sharpens how you frame a contrarian angle — nothing more. Never edit
+them.
 
 Sibling briefs are context, not your rule. The canon is off limits
 whether or not anyone has run mustsee-scout yet; an empty folder does not

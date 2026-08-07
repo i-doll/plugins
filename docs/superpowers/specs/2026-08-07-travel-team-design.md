@@ -51,8 +51,9 @@ folder. It defines:
   and a `Researched: <date>` line. Travel facts go stale; every brief wears
   its date.
 - **Entry shape** (used by all specialists): name; one-line why-go; time
-  needed; area/neighborhood; booking flag (`book-ahead` / `walk-up` /
-  `unknown`); source URL. One entry, one place — no multi-paragraph essays.
+  needed; when to go (best time, or the crowd window to avoid);
+  area/neighborhood; booking flag (`book-ahead` / `walk-up` / `unknown`);
+  source URL. One entry, one place — no multi-paragraph essays.
 - **Research integrity:** web research is mandatory. No brief is written
   from model memory alone — memory suggests leads; the web confirms them.
   Every factual claim a traveler would act on (hours, prices, lead times,
