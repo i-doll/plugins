@@ -118,9 +118,10 @@ appear; say so if nothing matches.
   `status:"timeout"` may just be a slow region, `"failed"` = sim refused) and `movement.walkTo` (walk on foot — the "move to here"
   autopilot — to a position/object/avatar; best for short in-region moves; **stays on foot, never
   flies** even for far/high targets unless you pass `fly:true`; **pass `pathfind:true` to route
-  around obstacles / through doorways** in a cluttered or multi-room space — a raycast-grid A\* on
-  the current floor, ~1s to plan (straight-line is the default and faster; use `pathfind` only when
-  the direct path is blocked); returns `status:"arrived"|"stopped"` + final distance). Get positions from `search.places`,
+  around obstacles / through doorways / up & down stairs & ramps** in a cluttered, multi-room, or
+  multi-level space — a raycast-grid A\* with per-cell floor height, ~1s to plan (straight-line is
+  the default and faster; use `pathfind` only when the direct path is blocked); returns
+  `status:"arrived"|"stopped"` + final distance). Get positions from `search.places`,
   `avatars.getNearby`, or `objects.getNearby`. `movement.turn` rotates in place without walking
   (a relative `degrees`, +left/−right, or something to face). `movement.sit`/`stand` wait ~5s and
   report the actual sitting state.
