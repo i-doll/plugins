@@ -113,8 +113,9 @@ appear; say so if nothing matches.
   `position + N·facing` (N metres). Then `movement.turn {avatar_id}` to face them. Don't infer
   "behind" from your own approach direction; use their `facing`.
 - **Moving.** Two ways: `movement.teleport` (instant, any distance — exactly one of a landmark item,
-  a global `[x,y,z]`, or a nearby `avatar_id`; async, up to 60s; `status:"timeout"` may just be a
-  slow region, `"failed"` = sim refused) and `movement.walkTo` (walk on foot — the "move to here"
+  a global `[x,y,z]`, a nearby `avatar_id`, or a **`slurl`** like `maps.secondlife.com/secondlife/Region/x/y/z`
+  or `secondlife://Region/x/y/z`, region name resolved automatically; async, up to 60s;
+  `status:"timeout"` may just be a slow region, `"failed"` = sim refused) and `movement.walkTo` (walk on foot — the "move to here"
   autopilot — to a position/object/avatar; best for short in-region moves; **stays on foot, never
   flies** even for far/high targets unless you pass `fly:true`; returns
   `status:"arrived"|"stopped"` + final distance). Get positions from `search.places`,
