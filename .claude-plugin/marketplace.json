@@ -25,6 +25,11 @@
       "name": "travel-team",
       "source": "./travel-team",
       "description": "Five travel-planning role agents — a gem-scout (locals-only, off-path finds), a mustsee-scout (the popular-but-worth-it canon, plus an honest skip list), a bookings agent (what sells out and how far ahead it really books), a food agent (street food to book-ahead tables, grouped by neighborhood), and a concierge (merges whatever briefs exist into one dossier) — sharing the trip-dossier skill so their sourced research composes into a loose menu of a trip, not an hour-by-hour itinerary."
+    },
+    {
+      "name": "post-file",
+      "source": "./post-file",
+      "description": "Upload files to files.th3a.dev and get a shareable link back. Markdown is rendered to a designed, self-contained HTML page first (via frontend-design) so the link opens as a page instead of downloading as a file."
     }
   ]
 }
