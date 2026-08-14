@@ -39,11 +39,11 @@ returns a URL that renders:
 
 ```sh
 node "${CLAUDE_PLUGIN_ROOT}/bin/post-file.mjs" post report.html --inline
-# https://files.th3a.dev/v1/files/<id>?disposition=inline
+# https://files.th3a.dev/<id>
 ```
 
-Inline is decided at upload time — an attachment upload cannot be made inline
-afterwards, so re-upload if you get it wrong.
+Inline is decided at upload time and baked into the link — an attachment upload
+cannot be made inline afterwards, so re-upload if you get it wrong.
 
 Post the raw file unchanged when the user explicitly asks for the source, or
 when the markdown is input to another tool rather than something to read.
@@ -63,17 +63,25 @@ file record. Content type comes from the extension unless `--type` overrides it.
 
 ## What to tell the user
 
-Give them the URL. **It needs the bearer token**, so it is not a link they can
-just click in a browser — say so rather than implying it is public.
+Give them the URL, on its own line so it is easy to click. It is a plain
+`https://files.th3a.dev/<uuid>` and it needs nothing else — no token, no login.
+Anyone who has it can open it.
+
+That cuts both ways, so before posting anything with personal details,
+credentials, client names, or private conversation, say plainly that the link is
+public to whoever holds it and let the user decide. The id is unguessable, so
+nobody finds it by accident, but there is no second check behind it and no
+expiry — `delete` is the only way to take something down.
 
 Uploads are logged centrally with the filename; reads are not logged. Mention
-that if they are posting something sensitive.
+that too if they are posting something sensitive.
 
 ## When something fails
 
 The CLI prints the status and a hint. The ones worth knowing:
 
-- **401** — bad or missing token.
+- **401** — bad or missing token. Only `post`, `list`, `meta` and `delete` need
+  one; `get` and the link itself do not.
 - **413** — over 95 MiB.
 - **400** — bad filename (no `/`, `\`, control or bidirectional characters) or
   bad content type.

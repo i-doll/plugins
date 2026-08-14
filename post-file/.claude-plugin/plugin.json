@@ -2,7 +2,7 @@
   "name": "post-file",
   "displayName": "Post File",
   "description": "Upload files to files.th3a.dev and get a shareable link back. Markdown is rendered to a designed, self-contained HTML page first so the link opens as a page instead of downloading as a file.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "i-doll",
     "url": "https://github.com/i-doll"

@@ -1,6 +1,9 @@
 # post-file
 
-Upload files to [files.th3a.dev](https://github.com/i-doll/post-file) and get a link back.
+Upload files to [files.th3a.dev](https://github.com/i-doll/post-file) and get a link back —
+a bare `https://files.th3a.dev/<uuid>` that anyone can open, no token needed.
+Posting takes the token; reading does not, so treat every link as public to
+whoever holds it. `delete` is the only way to unpublish.
 
 Markdown is rendered to a designed, self-contained HTML page (via the
 `frontend-design` skill) and posted as `text/html` with inline disposition, so

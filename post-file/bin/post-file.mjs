@@ -51,13 +51,15 @@ function flag(args, name) {
   return value ?? true;
 }
 
-async function call(path, init = {}) {
-  if (!TOKEN) die(`No token. Create ${CONFIG_PATH}:\n\n  { "token": "…" }\n\nthen: chmod 600 ${CONFIG_PATH}`);
+// `auth: false` is for the share link, which is public: reading a file needs
+// only its id, so `get` works on a machine that has no token configured.
+async function call(path, { auth = true, ...init } = {}) {
+  if (auth && !TOKEN) die(`No token. Create ${CONFIG_PATH}:\n\n  { "token": "…" }\n\nthen: chmod 600 ${CONFIG_PATH}`);
   let response;
   try {
     response = await fetch(`${BASE}${path}`, {
       ...init,
-      headers: { Authorization: `Bearer ${TOKEN}`, ...init.headers },
+      headers: { ...(auth ? { Authorization: `Bearer ${TOKEN}` } : {}), ...init.headers },
     });
   } catch (cause) {
     die(`Cannot reach ${BASE}: ${cause.message}`);
@@ -69,6 +71,7 @@ async function call(path, init = {}) {
   try { detail = JSON.parse(body).error.message; } catch {}
   const hint = {
     401: `Check the token in ${CONFIG_PATH}.`,
+    405: 'Wrong route for that verb — this is a bug in the CLI, please report it.',
     411: 'Body length was not known — this is a bug in the CLI, please report it.',
     413: 'File is over the service limit (95 MiB).',
     404: 'No such file.',
@@ -104,7 +107,9 @@ async function post(args) {
 
   const { file: uploaded } = await response.json();
   if (json) return console.log(JSON.stringify(uploaded, null, 2));
-  console.log(inline ? `${uploaded.url}?disposition=inline` : uploaded.url);
+  // `url` is the whole link: a bare id, public, no query string. Whether it
+  // renders or downloads was decided by --inline at upload time.
+  console.log(uploaded.url);
 }
 
 async function list(args) {
@@ -124,7 +129,7 @@ async function get(args) {
   const out = flag(args, 'out');
   const id = args[0];
   if (!id) die('usage: post-file get <id> [--out FILE]');
-  const response = await call(`/v1/files/${id}`);
+  const response = await call(`/${id}`, { auth: false });
   const bytes = Buffer.from(await response.arrayBuffer());
   if (!out) return process.stdout.write(bytes);
   await writeFile(out, bytes);
