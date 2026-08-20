@@ -1,0 +1,13 @@
+{
+  "name": "pstack",
+  "displayName": "pstack (Claude Code port)",
+  "description": "A port of Lauren Tan's pstack skills to Claude Code. /bro restates your last message in plain language, /unslop strips AI tells from prose, and /no-comments sends the Comment Sicko agent through a diff to delete comments and flag the code that made them necessary. Ships the dependency cone those three pull in: architect, arena, how, why, interrogate, show-me-your-work and 14 principle skills, all rewired to the Agent tool and Claude Code model pools.",
+  "version": "0.1.0",
+  "author": {
+    "name": "i-doll",
+    "url": "https://github.com/i-doll"
+  },
+  "homepage": "https://github.com/cursor/plugins/tree/main/pstack",
+  "license": "MIT",
+  "keywords": ["pstack", "unslop", "comments", "review", "architecture", "principles", "port"]
+}

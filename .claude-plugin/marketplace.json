@@ -30,6 +30,11 @@
       "name": "post-file",
       "source": "./post-file",
       "description": "Upload files to files.th3a.dev and get a shareable link back. Markdown is rendered to a designed, self-contained HTML page first (via frontend-design) so the link opens as a page instead of downloading as a file."
+    },
+    {
+      "name": "pstack",
+      "source": "./pstack",
+      "description": "A port of Lauren Tan's pstack (MIT, from cursor/plugins) to Claude Code. /bro restates the last message in plain language, /unslop strips AI tells from prose, /no-comments sends the Comment Sicko agent through a diff to delete comments and fix the code that made them necessary. Ships the whole dependency cone those three pull in: architect, arena, how, why, interrogate, show-me-your-work and 14 principle skills, rewired to the Agent tool and Claude Code model pools."
     }
   ]
 }
