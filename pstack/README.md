@@ -30,8 +30,14 @@ more skills. The full cone is here, 22 skills and one agent:
 | Agent | `comment-sicko` |
 
 Only `how`, `why` and `unslop` are model-invocable. The other 19 carry
-`disable-model-invocation: true`, so their descriptions stay out of context until you
-type the command.
+`disable-model-invocation: true`, so Claude never fires them on its own.
+
+`claude plugin details pstack` projects **~1,900 tokens always-on** for the set, and
+bills each `disable-model-invocation` skill ~70-90 of that. The docs say those
+descriptions stay out of context entirely, so the estimator is probably not modelling
+the flag and 1.9k is a ceiling rather than a measurement. Either way it is not free.
+The on-invoke costs are the ones that bite: `/why` runs ~7.2k, `/how` ~2.5k, `/unslop`
+~2.2k, `/bro` ~50.
 
 ## What changed in the port
 
