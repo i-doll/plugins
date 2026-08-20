@@ -39,6 +39,13 @@ and `warnings`, and the skill instructs the agent to check them before trusting
 results. Run `/mpsearch:auth` to connect a session; cookies are stored locally at
 `~/.config/mpsearch/config.json`, mode 0600, and never transmitted anywhere.
 
+The session hinges on **two** cookies, not one. `user_credentials` is the
+Marketplace's own and lasts about ninety days; `session-token` is the single sign-on
+token `id.secondlife.com` checks on every page load, and it lasts about three. A
+capture holding only the first is worse than none — the site logs the session out
+mid-request and drops the query with it — so capture while logged in at
+<https://secondlife.com/my/account>, not just at the Marketplace.
+
 ## Rebuilding
 
 The source lives in a separate repository (`mpsearch`) — this plugin ships only the

@@ -23,7 +23,10 @@ cannot do it for them. Present these instructions:
 > ```
 >
 > Then, in your browser:
-> 1. Open <https://marketplace.secondlife.com> while logged in to Second Life.
+> 1. Log in at <https://secondlife.com/my/account>, then open
+>    <https://marketplace.secondlife.com> in that same browser. Both steps matter:
+>    the account login is what sets the `session-token` cookie, and that is the one
+>    `id.secondlife.com` checks on every Marketplace page load.
 > 2. Open developer tools (**F12**, or ⌥⌘I on macOS) and select the **Network** tab.
 > 3. Reload the page.
 > 4. Right-click the first request — the HTML document, usually the top row — and
@@ -56,5 +59,7 @@ Once they have run it, call `session_status` again to confirm, and report the re
 plainly — including if it still says anonymous, which usually means the browser
 session itself was logged out.
 
-Sessions expire after a while. When searches start warning about maturity, or reviews
-come back empty, this is the fix.
+Sessions expire after a while — `session-token` lasts only about three days, while the
+`user_credentials` cookie beside it lasts about ninety. So a capture typically keeps
+*looking* like a session long after it stopped being one. When searches start warning
+about maturity, or reviews come back empty, this is the fix.
