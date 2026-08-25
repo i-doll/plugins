@@ -1,6 +1,6 @@
 ---
 name: firestorm-avatar
-description: Use when driving the user's Second Life avatar through the Firestorm viewer — moving (teleport/sit/stand), seeing (viewport snapshot), searching the world, browsing/organizing/wearing inventory, giving items, editing your own profile and viewing others', inspecting nearby avatars, 1:1 IM and group chat/notices, answering offers/dialogs, touching in-world objects, uploading assets (images, sounds, animations, materials), and paying L$. All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
+description: Use when driving the user's Second Life avatar through the Firestorm viewer — moving (teleport/sit/stand), seeing (viewport snapshot), searching the world, browsing/organizing/wearing inventory, giving items, authoring gestures and wearables (clothing, tattoos, body shapes), editing your own profile and viewing others', inspecting nearby avatars, 1:1 IM and group chat/notices, answering offers/dialogs, touching in-world objects, uploading assets (images, sounds, animations, materials), and paying L$. All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
 ---
 
 # Driving the Firestorm avatar
@@ -32,6 +32,8 @@ root for the written reference. By area:
 | Inventory | `inventory.getFolder`/`getItem`/`search`/`createFolder`/`rename`/`move`/`delete`/`giveItem`/`giveFolder`/`createItem`/`refresh` | Browse, organize, give |
 | Notecards/Scripts | `notecard.read`/`write`, `script.read`/`write` | Read/edit item contents; scripts compile (mono/lsl2/luau/lsl-luau) |
 | Appearance | `appearance.wearItems`/`detachItems`/`wearOutfit`/`listOutfits`/`getWorn` | Wear/remove, outfits |
+| Gestures | `gesture.list`/`read`/`create`/`write`/`activate`/`deactivate`/`play` | Author gestures (trigger, key bind, animation/sound/chat/wait steps); activate and fire them |
+| Wearables | `wearable.read`/`create`/`write` | Author clothing & body parts — textures, tint, and slider params. **Writes are worn-only** |
 | Profile | `profile.get`/`setSelf`, `profile.getPicks`/`getClassifieds`, `people.getNames`, `people.getFriends` | View/edit profiles, read picks & classified ads in full, resolve names, list friends (online + granted rights) |
 | Search | `search.people`/`places`/`groups`/`events`/`land`/`classifieds` | Directory search (headless) |
 | Nearby | `avatars.getNearby`, `avatars.getWorn` | Who's around, where they are & which way they face, what they have attached |
@@ -53,7 +55,9 @@ advisory — the action does not happen.
 - Before a restricted action, check `rlv.getRestrictions` (what's active) or `rlv.canDo`
   (would this specific call be allowed?).
 - Common gates: `@showinv` (inventory browse), `@detach`/wearable locks (appearance),
-  `@shownames` (others' names/profiles), `@viewnote`/`@viewscript` (contents), `@shownearby`
+  `@shownames` (others' names/profiles), `@viewnote`/`@viewscript` (contents), `@edit`
+  (authoring gestures/wearables — a fork extension of `@edit` to inventory content),
+  `@sendgesture` (gesture.play), `@shownearby`
   (nearby avatars), `@showsearch` (search), `@share` (giving), `@setgroup` (group activate),
   `@tplm`/`@tploc`/`@tplocal` (teleport), `@sit`/`@unsit` (sit/stand), `@touchworld`/`@touchall`/
   `@interact` (object.touch), `@sendim`/`@recvim` (IM), `@pay`/`@buy` (money.pay).

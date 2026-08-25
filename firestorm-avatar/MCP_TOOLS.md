@@ -13,7 +13,7 @@ Custom fork (`ID` prefix). An in-process MCP server that lets an AI agent drive 
 
 Every mutating or identity-revealing tool passes a single RLV gate. A blocked call returns JSON-RPC error `-32011` with `{restriction, sources:[{object_id,root_id,attach_pt,name}], checkedAt}`. Use `rlv.getRestrictions` to see what's active and `rlv.canDo` to check a call before making it.
 
-**74 tools** across 20 areas.
+**84 tools** across 22 areas.
 
 ## Health
 
@@ -77,6 +77,36 @@ Talk to in-world scripted objects, HUDs, vendors, and **RLV relays** on any chan
 |---|---|---|
 | `script.read` | `item_id*`: string | Read an LSL script's source by {"item_id"} (UUID). Returns {text}. Blocked by RLV @viewscript. |
 | `script.write` | `item_id*`: string<br>`text*`: string<br>`target`: mono \| lsl2 \| luau \| lsl-luau | Replace a script's source and recompile. `mono` (default) and `lsl2` take **LSL** source; `lsl-luau` takes **LSL** source and compiles it to Luau; `luau` takes **Luau** source. `lsl-luau`/`luau` need region Luau support. Returns {compiled, errors?}. Blocked by RLV @viewscript. |
+
+## Gestures
+
+Author and drive gestures. A gesture is a trigger word and/or key binding plus an ordered list of steps (animation, sound, chat, wait). `gesture.create` makes an empty item, `gesture.write` fills it in, `gesture.activate` makes the trigger live.
+
+**A newly created gesture arrives with the server's default trigger `/hey` and replace-text `Hey!`.** `gesture.write` is a partial update, so omitting those keeps them — pass `trigger:""` and `replace_with:""` explicitly if you want a key-only gesture.
+
+Gestures sharing a key binding are **not** all fired at once: the viewer picks one at random from the matching set, which is how "9 copies on F2" gives variation rather than noise.
+
+| Tool | Params | Description |
+|---|---|---|
+| `gesture.list` | — | List the currently **active** gestures — the ones whose trigger words are live. Returns `{gestures:[{item_id, name, trigger, playing}]}`. Inactive gestures are ordinary inventory items; find them with `inventory.search`. Blocked by RLV @showinv. |
+| `gesture.read` | `item_id*`: string | Read a gesture. Returns `{name, trigger, replace_with, key, mask, active, steps[]}`. Steps are `{type:"animation", animation, asset_id, action:"start"\|"stop"}`, `{type:"sound", sound, asset_id}`, `{type:"chat", text}`, `{type:"wait", seconds, for_animations, for_key_release}`. A gesture with no asset yet reads as an empty step list. Blocked by RLV @showinv. |
+| `gesture.create` | `parent*`: string<br>`name*`: string | Create a new empty gesture in a folder. Returns the new item id; add trigger and steps with `gesture.write`, then `gesture.activate`. Blocked by RLV @edit. |
+| `gesture.write` | `item_id*`: string<br>`trigger`: string<br>`replace_with`: string<br>`key`: integer<br>`mask`: integer<br>`steps`: object[] | Update a gesture. Omitted fields keep their current value; `steps` replaces the whole list. Step `animation`/`sound` accept an inventory item name **or** a UUID; if a step also carries the `asset_id` that `gesture.read` returned, that wins, so read-modify-write round-trips exactly. `key` is a viewer keycode (F2=162, F3=163, F6=166); `mask` is 0 none / **1 Ctrl** / 2 Alt / **4 Shift**. Rename the item itself with `inventory.rename`. Serialized gestures are capped at 1000 bytes. Blocked by RLV @edit. |
+| `gesture.activate` | `item_id*`: string | Activate a gesture so its trigger word and key binding go live. Asynchronous — confirm with `gesture.list`. Returns `{accepted, active}`. |
+| `gesture.deactivate` | `item_id*`: string | Deactivate a gesture so its trigger stops firing. Returns `{accepted, active}`. |
+| `gesture.play` | `item_id*`: string | Play an **active** gesture now. Runs through the viewer's gesture manager, so RLV @sendgesture and chat restrictions apply as for a hand-triggered gesture. Note a suppressed play still returns `accepted:true` — the manager fails silently. |
+
+## Wearables
+
+Read and author clothing and body parts — textures, tint colours, and the visual params a human sees as sliders. Slot and param names come from `wearable.read`.
+
+**Writes are worn-only.** The viewer has no capability for saving an unworn wearable; every save path is keyed to a currently-worn `(type, index)`. `wearable.write` on an unworn item returns an error telling you to wear it first. Reads work either way.
+
+| Tool | Params | Description |
+|---|---|---|
+| `wearable.read` | `item_id*`: string | Read a wearable. Returns `{type, name, worn, textures{slot:uuid}, colors{slot:[r,g,b]}, params[{id, name, label, value, min, max, default}]}`. Slot names are the avatar texture-layer names for that wearable type; `params` is the tweakable set. Works worn or unworn. Blocked by RLV @showinv. |
+| `wearable.create` | `parent*`: string<br>`name*`: string<br>`type*`: string<br>`wear`: boolean | Create a wearable at default settings. `type` is one of shape, skin, hair, eyes, shirt, pants, shoes, socks, jacket, gloves, undershirt, underpants, skirt, alpha, tattoo, physics, universal. `wear` default true — it must be worn before `wearable.write` can change it. Returns `{accepted, item_id, wear_requested}`; the wear completes asynchronously and is subject to RLV wearable locks, so confirm with `appearance.getWorn`. Blocked by RLV @edit. |
+| `wearable.write` | `item_id*`: string<br>`name`: string<br>`textures`: object<br>`colors`: object<br>`params`: object | Change a **worn** wearable and save it. Any subset of `name`, `textures` `{slot: texture-uuid}`, `colors` `{slot: [r,g,b]}`, `params` `{name-or-id: value}`. Param values outside min/max are **rejected, not clamped**; colour writes to a slot with no colour channel (bodypaint, alpha) are rejected. All validation runs before any mutation, so a bad field never half-writes. Blocked by RLV @edit. |
 
 ## Appearance
 

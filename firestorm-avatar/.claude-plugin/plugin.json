@@ -1,8 +1,8 @@
 {
   "name": "firestorm-avatar",
   "displayName": "Firestorm Avatar (MCP)",
-  "description": "Skills + MCP connection to drive the user's Second Life avatar through the embedded Firestorm MCP server: movement (teleport/sit/stand), vision (viewport snapshot), inventory, appearance, profiles, search, groups, 1:1 IM, offers/dialog responses, object touch, uploads, nearby-avatar inspection, bridge-mediated in-world chat / RLV relays, and guarded L$ payments. Requires the ID-fork Firestorm build with IDMCPServerEnabled.",
-  "version": "0.7.1",
+  "description": "Skills + MCP connection to drive the user's Second Life avatar through the embedded Firestorm MCP server: movement (teleport/sit/stand), vision (viewport snapshot), inventory, appearance, gesture and wearable authoring, profiles, search, groups, 1:1 IM, offers/dialog responses, object touch, uploads, nearby-avatar inspection, bridge-mediated in-world chat / RLV relays, and guarded L$ payments. Requires the ID-fork Firestorm build with IDMCPServerEnabled.",
+  "version": "0.8.0",
   "author": {
     "name": "i-doll",
     "url": "https://github.com/i-doll"
