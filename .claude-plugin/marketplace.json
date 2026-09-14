@@ -35,6 +35,11 @@
       "name": "pstack",
       "source": "./pstack",
       "description": "A port of Lauren Tan's pstack (MIT, from cursor/plugins) to Claude Code. /bro restates the last message in plain language, /unslop strips AI tells from prose, /no-comments sends the Comment Sicko agent through a diff to delete comments and fix the code that made them necessary. Ships the whole dependency cone those three pull in: architect, arena, how, why, interrogate, show-me-your-work and 14 principle skills, rewired to the Agent tool and Claude Code model pools."
+    },
+    {
+      "name": "ste100",
+      "source": "./ste100",
+      "description": "Write and audit documentation in ASD-STE100 Simplified Technical English, the controlled language used for aerospace and defence technical publications. Carries all 53 writing rules of Issue 9 and the eight general recommendations, keyed to their real rule numbers, plus a word-choice reference for software documentation — including the technical-verb category that makes click, delete, install and validate legal STE, which naive guides get wrong."
     }
   ]
 }

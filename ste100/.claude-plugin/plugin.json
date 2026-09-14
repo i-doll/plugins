@@ -1,0 +1,13 @@
+{
+  "name": "ste100",
+  "displayName": "ASD-STE100 Simplified Technical English",
+  "description": "Write and audit documentation in Simplified Technical English, the ASD-STE100 controlled language. Encodes all 53 writing rules of Issue 9 across the nine sections, the eight general recommendations, and a word-choice table for the swaps that come up in software documentation.",
+  "version": "0.1.0",
+  "author": {
+    "name": "i-doll",
+    "url": "https://github.com/i-doll"
+  },
+  "homepage": "https://www.asd-ste100.org/",
+  "license": "MIT",
+  "keywords": ["ste", "asd-ste100", "simplified-technical-english", "controlled-language", "documentation", "technical-writing", "plain-language"]
+}

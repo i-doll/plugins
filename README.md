@@ -8,6 +8,7 @@
 | **`mpsearch`** | Skills + a bundled MCP server for searching the Second Life Marketplace: listings, permissions, reviews, stores, categories. |
 | **`dev-team`** | Reusable role agents — product owner, autonomous senior developer, QA, designer, and changelog editor — sharing a work-queue handoff protocol. |
 | **`travel-team`** | Five travel-planning role agents — gem-scout, mustsee-scout, bookings, food, and concierge — sharing a trip-dossier skill so their sourced research composes into a loose menu of a trip. |
+| **`ste100`** | ASD-STE100 Simplified Technical English as a skill — write documentation in the controlled language, or audit existing docs against its 53 rules. |
 
 This repo is both the marketplace (`.claude-plugin/marketplace.json`) and the plugins themselves.
 
@@ -19,6 +20,7 @@ claude plugin install firestorm-avatar@idoll
 claude plugin install mpsearch@idoll
 claude plugin install dev-team@idoll
 claude plugin install travel-team@idoll
+claude plugin install ste100@idoll
 ```
 
 See [`firestorm-avatar/README.md`](firestorm-avatar/README.md) for the viewer-side requirements
@@ -34,6 +36,10 @@ chaining pattern.
 
 See [`travel-team/README.md`](travel-team/README.md) for the agent roles and the trip-folder
 convention the shared trip-dossier skill uses.
+
+See [`ste100/README.md`](ste100/README.md) for what the skill covers, the software-documentation
+readings it adds, and why it carries a partial dictionary rather than a vendored copy of the
+standard.
 
 ## Layout
 
@@ -58,10 +64,16 @@ plugins/
 │   ├── agents/{changelog,designer,product-owner,qa,senior-developer}.md
 │   ├── skills/work-queue/SKILL.md
 │   └── README.md
-└── travel-team/
+├── travel-team/
+│   ├── .claude-plugin/plugin.json
+│   ├── agents/{bookings,concierge,food,gem-scout,mustsee-scout}.md
+│   ├── skills/trip-dossier/SKILL.md
+│   └── README.md
+└── ste100/
     ├── .claude-plugin/plugin.json
-    ├── agents/{bookings,concierge,food,gem-scout,mustsee-scout}.md
-    ├── skills/trip-dossier/SKILL.md
+    ├── skills/simplified-technical-english/
+    │   ├── SKILL.md                    # the 53 rules + write/audit modes
+    │   └── references/word-choice.md   # swaps, POS traps, technical verbs
     └── README.md
 ```
 
