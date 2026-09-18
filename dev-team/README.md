@@ -1,8 +1,8 @@
 # dev-team (Claude Code plugin)
 
 Reusable role agents you call on demand and chain as needed. No MCP server,
-no commands — just five agents and the protocol that lets them hand work to
-each other.
+no commands — just five agents, the protocol that lets them hand work to
+each other, and the house style for changelog entries.
 
 ## What's in here
 
@@ -36,7 +36,15 @@ each other.
   entry under Unreleased, or a reasoned refusal), **Review** (entry plus its
   diff → ranked findings on slop, inaccuracy, and misses). Changelog files
   only, never code or other docs; every entry grounded in the diff; never
-  tags, publishes, or decides version numbers.
+  tags, publishes, or decides version numbers. Writes to the `changelog`
+  skill's style.
+- **`skills/changelog/`** — the house style for changelog entries and the
+  method for writing them from a diff. One imperative line per entry, verb
+  first, no clause explaining how or when the change applies ("Persist sort
+  order for search and store separately", never "The sort you pick is
+  remembered, one for…"). Invoke it directly (`/dev-team:changelog`) when
+  editing a CHANGELOG.md yourself; the changelog agent invokes it in every
+  mode.
 - **`skills/work-queue/`** — the shared handoff contract: queue selection
   (GitHub issues when the origin is on GitHub and `gh` is authenticated,
   session tasks otherwise), item shape, ready/blocked markers, claim

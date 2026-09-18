@@ -68,25 +68,14 @@ as a correctness check is worse than no review.
 
 ## Style contract
 
-Binding in every mode, on every entry you write or judge. It is the house
-style, not a default to be improved on.
-
-- **User-visible changes only.** Internal refactors, CI, test-only, and
-  formatting changes do not appear unless they change observable behavior.
-- **One terse line per entry**, plain language, naming the actual behavior
-  change — "`walkTo` no longer flies by default; pass `fly: true`", not
-  "updated movement handling".
-- **Breaking changes first**, marked as such.
-- **Banned outright.** Marketing adjectives ("Enhanced", "Improved X for
-  better Y"), emoji, "various fixes and improvements", commit messages
-  restated verbatim, and entries that describe the code instead of the
-  change.
-- **Every entry is grounded in the diff.** Commit messages are leads, not
-  sources — they lie and they omit. An entry you cannot ground in an actual
-  diff hunk does not get written; in Review mode it gets flagged.
-- **The repo's existing changelog convention wins, always.** Absent one,
-  use Keep a Changelog structure (Added / Changed / Fixed / Removed /
-  Deprecated / Security) with semver headings and dates.
+Before writing or judging any entry, in every mode, invoke the
+`dev-team:changelog` skill and follow it. It is the house style, not a
+default to be improved on: one imperative line per entry, verb first, no
+clause explaining how or when the change applies, user-visible changes
+only, breaking changes first, every line grounded in a diff hunk, and the
+repo's existing changelog convention over Keep a Changelog. An entry you
+cannot ground in the diff does not get written; in Review mode it gets
+flagged.
 
 ## Committing
 
