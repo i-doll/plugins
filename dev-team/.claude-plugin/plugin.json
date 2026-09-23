@@ -1,11 +1,11 @@
 {
   "name": "dev-team",
   "displayName": "Dev Team Agents",
-  "description": "Reusable role agents you can invoke on demand and chain: a product owner (shape specs, guard scope, cut backlog items), an autonomous senior developer (ship-ready delivery: verified, signed commits, pushed, PR opened), a QA verifier (verify, plan, break), a designer (explore, refine, critique), and a changelog editor (cut, curate, review). All five follow the shared work-queue skill — GitHub issues when gh is available, session tasks otherwise — so they can run a fully autonomous fill-queue/drain-queue loop.",
-  "version": "0.3.0",
+  "description": "Reusable role agents you can invoke on demand and chain: a product owner (shape specs, guard scope, cut backlog items), an autonomous senior developer (ship-ready delivery: verified, signed commits, pushed, PR opened), a QA verifier (verify, plan, break), a designer (explore, refine, critique), and a changelog editor (cut, curate, review). The changelog editor and any session that edits a changelog follow the shared changelog skill (one imperative line per entry, grounded in the diff). All five follow the shared work-queue skill — GitHub issues when gh is available, session tasks otherwise — so they can run a fully autonomous fill-queue/drain-queue loop.",
+  "version": "0.4.0",
   "author": {
     "name": "i-doll",
     "url": "https://github.com/i-doll"
   },
-  "keywords": ["agents", "product-owner", "senior-developer", "qa", "designer", "backlog", "autonomous", "changelog"]
+  "keywords": ["agents", "product-owner", "senior-developer", "qa", "designer", "backlog", "autonomous", "changelog", "release-notes"]
 }

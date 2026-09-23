@@ -6,7 +6,7 @@
 |---|---|
 | **`firestorm-avatar`** | Skills + MCP connection for driving a Second Life avatar through the embedded Firestorm MCP server. |
 | **`mpsearch`** | Skills + a bundled MCP server for searching the Second Life Marketplace: listings, permissions, reviews, stores, categories. |
-| **`dev-team`** | Reusable role agents — product owner, autonomous senior developer, QA, designer, and changelog editor — sharing a work-queue handoff protocol. |
+| **`dev-team`** | Reusable role agents — product owner, autonomous senior developer, QA, designer, and changelog editor — sharing a work-queue handoff protocol, plus the changelog house-style skill. |
 | **`travel-team`** | Five travel-planning role agents — gem-scout, mustsee-scout, bookings, food, and concierge — sharing a trip-dossier skill so their sourced research composes into a loose menu of a trip. |
 | **`ste100`** | ASD-STE100 Simplified Technical English as a skill — write documentation in the controlled language, or audit existing docs against its 53 rules. |
 
@@ -63,6 +63,7 @@ plugins/
 │   ├── .claude-plugin/plugin.json
 │   ├── agents/{changelog,designer,product-owner,qa,senior-developer}.md
 │   ├── skills/work-queue/SKILL.md
+│   ├── skills/changelog/SKILL.md      # house style + method for changelog entries
 │   └── README.md
 ├── travel-team/
 │   ├── .claude-plugin/plugin.json
