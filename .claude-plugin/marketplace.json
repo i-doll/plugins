@@ -29,7 +29,7 @@
     {
       "name": "post-file",
       "source": "./post-file",
-      "description": "Upload files to files.th3a.dev and get a shareable link back. Markdown is rendered to a designed, self-contained HTML page first (via frontend-design) so the link opens as a page instead of downloading as a file."
+      "description": "Upload files to files.th3a.dev and get a shareable link back. Folders with an index.html post as live site previews. Markdown is rendered to a designed, self-contained HTML page first (via frontend-design) so the link opens as a page instead of downloading as a file."
     },
     {
       "name": "pstack",

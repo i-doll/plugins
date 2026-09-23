@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 // CLI for files.th3a.dev. The token comes from a config file, never argv.
 import { readFile, writeFile, stat } from 'node:fs/promises';
-import { basename, extname, join } from 'node:path';
+import { basename, extname, join, resolve } from 'node:path';
 import { homedir } from 'node:os';
+import { spawn } from 'node:child_process';
 
 const die = (message) => { console.error(message); process.exit(1); };
 
@@ -53,7 +54,9 @@ function flag(args, name) {
 
 // `auth: false` is for the share link, which is public: reading a file needs
 // only its id, so `get` works on a machine that has no token configured.
-async function call(path, { auth = true, ...init } = {}) {
+// `missing: true` returns null on a 404 instead of exiting, for commands that
+// try a file id and then a site id.
+async function call(path, { auth = true, missing = false, ...init } = {}) {
   if (auth && !TOKEN) die(`No token. Create ${CONFIG_PATH}:\n\n  { "token": "…" }\n\nthen: chmod 600 ${CONFIG_PATH}`);
   let response;
   try {
@@ -65,6 +68,7 @@ async function call(path, { auth = true, ...init } = {}) {
     die(`Cannot reach ${BASE}: ${cause.message}`);
   }
   if (response.ok) return response;
+  if (missing && response.status === 404) return null;
 
   const body = await response.text().catch(() => '');
   let detail = body.slice(0, 200);
@@ -73,10 +77,38 @@ async function call(path, { auth = true, ...init } = {}) {
     401: `Check the token in ${CONFIG_PATH}.`,
     405: 'Wrong route for that verb — this is a bug in the CLI, please report it.',
     411: 'Body length was not known — this is a bug in the CLI, please report it.',
-    413: 'File is over the service limit (95 MiB).',
-    404: 'No such file.',
+    413: 'Over the service limit: 95 MiB, and at most 500 files in a folder.',
+    404: 'No such file or site.',
   }[response.status];
   die(`${response.status} ${detail}${hint ? `\n${hint}` : ''}`);
+}
+
+// Packs a folder with the system tar. COPYFILE_DISABLE keeps macOS from adding
+// `._` resource-fork files beside anything with extended attributes.
+function pack(dir) {
+  return new Promise((done, fail) => {
+    const tar = spawn('tar', ['-C', dir, '-czf', '-', '.'], {
+      env: { ...process.env, COPYFILE_DISABLE: '1' },
+      stdio: ['ignore', 'pipe', 'inherit'],
+    });
+    const chunks = [];
+    tar.stdout.on('data', (chunk) => chunks.push(chunk));
+    tar.on('error', fail);
+    tar.on('close', (code) => (code === 0 ? done(Buffer.concat(chunks)) : fail(new Error(`tar exited with ${code}`))));
+  });
+}
+
+async function postFolder(dir, { name, json }) {
+  await stat(join(dir, 'index.html')).catch(() => die(`${dir} has no index.html at its top level. Post the folder that contains it.`));
+  const archive = await pack(dir).catch((cause) => die(`Cannot pack ${dir}: ${cause.message}`));
+  const response = await call('/v1/sites', {
+    method: 'POST',
+    body: archive,
+    headers: { 'Content-Type': 'application/gzip', 'X-Site-Name': name ?? basename(resolve(dir)) },
+  });
+  const { site } = await response.json();
+  if (json) return console.log(JSON.stringify(site, null, 2));
+  console.log(site.url);
 }
 
 async function post(args) {
@@ -85,7 +117,13 @@ async function post(args) {
   const inline = Boolean(flag(args, 'inline'));
   const json = Boolean(flag(args, 'json'));
   const file = args[0];
-  if (!file) die('usage: post-file post <file> [--name N] [--type T] [--inline] [--json]');
+  if (!file) die('usage: post-file post <file|folder> [--name N] [--type T] [--inline] [--json]');
+
+  const info = await stat(file).catch(() => die(`Cannot read ${file}`));
+  if (info.isDirectory()) {
+    if (type || inline) die('--type and --inline apply to single files. A folder is always served as a live site.');
+    return postFolder(file, { name, json });
+  }
 
   const bytes = await readFile(file).catch(() => die(`Cannot read ${file}`));
   const filename = name ?? basename(file);
@@ -125,6 +163,19 @@ async function list(args) {
   if (next) console.log(`\nMore: --cursor ${next}`);
 }
 
+async function sites(args) {
+  const limit = flag(args, 'limit');
+  const cursor = flag(args, 'cursor');
+  const query = new URLSearchParams();
+  if (limit) query.set('limit', String(limit));
+  if (cursor) query.set('cursor', String(cursor));
+  const { sites: found, cursor: next } = await (await call(`/v1/sites?${query}`)).json();
+
+  if (!found.length) return console.log('No sites.');
+  for (const s of found) console.log(`${s.id}  ${String(s.size).padStart(9)}  ${String(s.file_count).padStart(4)} files  ${s.created_at}  ${s.name}`);
+  if (next) console.log(`\nMore: --cursor ${next}`);
+}
+
 async function get(args) {
   const out = flag(args, 'out');
   const id = args[0];
@@ -139,25 +190,29 @@ async function get(args) {
 async function meta(args) {
   const id = args[0];
   if (!id) die('usage: post-file meta <id>');
-  const { file } = await (await call(`/v1/files/${id}/metadata`)).json();
-  console.log(JSON.stringify(file, null, 2));
+  const asFile = await call(`/v1/files/${id}/metadata`, { missing: true });
+  const body = await (asFile ?? await call(`/v1/sites/${id}/metadata`)).json();
+  console.log(JSON.stringify(body.file ?? body.site, null, 2));
 }
 
 async function remove(args) {
   const id = args[0];
   if (!id) die('usage: post-file delete <id>');
-  await call(`/v1/files/${id}`, { method: 'DELETE' });
+  const deleted = await call(`/v1/files/${id}`, { method: 'DELETE', missing: true });
+  if (!deleted) await call(`/v1/sites/${id}`, { method: 'DELETE' });
   console.log(`Deleted ${id}`);
 }
 
-const commands = { post, upload: post, list, ls: list, get, meta, delete: remove, rm: remove };
+const commands = { post, upload: post, list, ls: list, sites, get, meta, delete: remove, rm: remove };
 
 const [command, ...rest] = process.argv.slice(2);
 if (!command || command === '--help' || command === '-h') {
   console.log(`post-file — upload to ${BASE}
 
   post <file> [--name N] [--type T] [--inline] [--json]
+  post <folder> [--name N] [--json]    folder with index.html, served as a live site
   list [--limit N] [--cursor C]
+  sites [--limit N] [--cursor C]
   get <id> [--out FILE]
   meta <id>
   delete <id>
