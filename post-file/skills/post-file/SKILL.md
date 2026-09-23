@@ -32,10 +32,10 @@ Constraints the service imposes on the page:
   scripts silently do nothing.
 - **One file.** No external CSS, fonts, or images — nothing else was uploaded.
   Inline the CSS; embed images as `data:` URIs.
+- Style both light and dark via `prefers-color-scheme`.
 
 If the page really needs scripts or separate asset files, post it as a folder
 instead (next section).
-- Style both light and dark via `prefers-color-scheme`.
 
 Post it with `--inline`, which sets the content type from the extension and
 returns a URL that renders:
