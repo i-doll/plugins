@@ -9,7 +9,7 @@
     {
       "name": "firestorm-avatar",
       "source": "./firestorm-avatar",
-      "description": "Drive the user's Second Life avatar via the embedded Firestorm MCP server — inventory, appearance, profiles, search, groups, uploads, nearby-avatar inspection, in-world chat + RLV relays. Bundles the three firestorm-* skills and the MCP connection."
+      "description": "Drive the user's Second Life avatar via the embedded Firestorm MCP server — inventory, appearance, gesture and wearable authoring, profiles, search, groups, uploads, nearby-avatar inspection, in-world chat + RLV relays. Bundles the three firestorm-* skills and the MCP connection."
     },
     {
       "name": "mpsearch",
