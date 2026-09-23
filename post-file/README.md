@@ -9,6 +9,9 @@ Markdown is rendered to a designed, self-contained HTML page (via the
 `frontend-design` skill) and posted as `text/html` with inline disposition, so
 the link opens as a page rather than downloading as a `.md`.
 
+A folder with an `index.html` posts as a live site on its own subdomain, with
+its scripts and assets working.
+
 ## Setup
 
 ```sh
@@ -21,4 +24,5 @@ chmod 600 ~/.config/post-file/config.json
 
 ```sh
 node bin/post-file.mjs post report.html --inline
+node bin/post-file.mjs post dist    # a folder with index.html → https://<id>.preview.th3a.dev/
 ```
