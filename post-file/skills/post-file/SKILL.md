@@ -71,6 +71,7 @@ scripts, styles or images. Point it at the build output (`dist`, `build`,
 - `dir/` serves `dir/index.html`. There is no single-page-app fallback: a
   client-side route works only when the page is opened at `/`.
 - Limits: 95 MiB unpacked and at most 500 files. Symlinks are refused.
+- Service workers do not register, so an offline-capable app runs online only.
 - `--name` sets the display name, which defaults to the folder's name.
   `--type` and `--inline` do not apply to folders.
 
