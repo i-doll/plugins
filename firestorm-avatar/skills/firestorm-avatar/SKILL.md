@@ -1,6 +1,6 @@
 ---
 name: firestorm-avatar
-description: Use when driving the user's Second Life avatar through the Firestorm viewer — moving (teleport/sit/stand), seeing (viewport snapshot), searching the world, browsing/organizing/wearing inventory, giving items, authoring gestures and wearables (clothing, tattoos, body shapes), editing your own profile and viewing others', inspecting nearby avatars, 1:1 IM and group chat/notices, answering offers/dialogs, touching in-world objects, uploading assets (images, sounds, animations, materials), and paying L$. All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
+description: Use when driving the user's Second Life avatar through the Firestorm viewer — moving (teleport/sit/stand), seeing (viewport snapshot), searching the world, browsing/organizing/wearing inventory, giving items, authoring gestures and wearables (clothing, tattoos, body shapes), editing your own profile and viewing others', inspecting nearby avatars, 1:1 IM and group chat/notices, answering offers/dialogs, touching in-world objects, uploading assets (images, sounds, animations, materials, mesh), and paying L$. All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
 ---
 
 # Driving the Firestorm avatar
@@ -43,7 +43,7 @@ root for the written reference. By area:
 | IM (1:1) | `im.send`/`replies`/`getConversations`/`getMessages` | Private person-to-person messaging |
 | Notifications | `notifications.list`/`respond` | Answer offers (items/teleport/friendship/group) + blue-menu dialogs |
 | Groups | `group.list`/`getInfo`/`activate`/`sendIM`/`getNotices`/`sendNotice` | Group chat + notices |
-| Uploads | `upload.image`/`sound`/`animation`/`material` | Upload assets (cost L$ — see below) |
+| Uploads | `upload.image`/`sound`/`animation`/`material`/`mesh` | Upload assets (cost L$ — see below) |
 | Money | `money.getBalance`/`pay` | Check balance; pay L$ (pay is fenced — see below) |
 
 ## RLV restrictions are HARD-enforced
@@ -78,6 +78,8 @@ get approval → re-call with `confirm: true`. One approval per batch, not per f
 - `dest` = folder UUID or well-known name (default = the type's system folder: Textures/
   Sounds/Animations/Materials). `names` overrides per-file inventory names (default = filename stem).
 - There is **no RLV gate** on uploads; the `confirm` requirement is the spend guard.
+- `upload.mesh` is the exception to the batch shape: one model per call, given as `path`. Its
+  dry run is the server's real fee quote (plus land impact and triangle counts), not an estimate.
 
 ## Identifying what someone is wearing
 
@@ -179,6 +181,12 @@ RLV, or funds) rather than retrying.
 - **Animations:** `.bvh` is converted client-side (knobs: `loop`, `priority` 0-4, `ease_in`/
   `ease_out`, `hand_pose`); pre-baked `.anim` uploads as-is. `luau`/`lsl-luau` script targets and
   Luau features need region support that isn't universal.
+- **Mesh runs through the Upload Model floater.** It opens while the tool works, so only one
+  mesh upload can run at a time; a second call gets busy error `-32006`. Rigged items keep the
+  rig the model contains unless you override `rigged`. Leave `physics` at its default (`none`)
+  for worn items; `lowest`/`cube` are for props, and `analyze` needs one of them. If the dry run
+  says `upload_blocked`, show the user `blocked_reason` instead of confirming. On a timeout with
+  `upload_sent: true`, check inventory before retrying, because the upload may have landed.
 - **Materials are fire-and-forget.** `upload.material` returns the enqueue + estimated cost but
   no per-item id — verify the created items with `inventory.getFolder` on the dest.
 - **Read-after-write is fine now.** `script.read`/`notecard.read` resolve the asset server-side
