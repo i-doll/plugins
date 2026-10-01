@@ -33,7 +33,7 @@ root for the written reference. By area:
 | Notecards/Scripts | `notecard.read`/`write`, `script.read`/`write` | Read/edit item contents; scripts compile (mono/lsl2/luau/lsl-luau) |
 | Appearance | `appearance.wearItems`/`detachItems`/`wearOutfit`/`listOutfits`/`getWorn` | Wear/remove, outfits |
 | Gestures | `gesture.list`/`read`/`create`/`write`/`activate`/`deactivate`/`play` | Author gestures (trigger, key bind, animation/sound/chat/wait steps); activate and fire them |
-| Wearables | `wearable.read`/`create`/`write` | Author clothing & body parts — textures, tint, and slider params. **Writes are worn-only** |
+| Wearables | `wearable.read`/`create`/`write` | Author clothing & body parts — textures, tint, and slider params. **Writes are worn-only**; detach, wait 5 s and re-attach afterwards to save |
 | Profile | `profile.get`/`setSelf`, `profile.getPicks`/`getClassifieds`, `people.getNames`, `people.getFriends` | View/edit profiles, read picks & classified ads in full, resolve names, list friends (online + granted rights) |
 | Search | `search.people`/`places`/`groups`/`events`/`land`/`classifieds` | Directory search (headless) |
 | Nearby | `avatars.getNearby`, `avatars.getWorn` | Who's around, where they are & which way they face, what they have attached |
@@ -82,6 +82,23 @@ get approval → re-call with `confirm: true`. One approval per batch, not per f
 - `upload.mesh` is the exception to the batch shape: one model per call, given as `path`. Its
   dry run is the server's real fee quote (plus land impact and triangle counts), not an estimate.
 
+## Saving edits to worn items
+
+An edit to something worn isn't reliably saved on the asset server, or shown to others, until the
+item comes off and goes back on. This covers clothing, alpha layers, tattoos, body parts and
+attachments, after `wearable.write` or any `object.edit`, `object.setFaces` or
+`object.addContents` on a worn object.
+
+After the last edit to an item:
+
+1. `appearance.detachItems` with the item's id.
+2. Wait 5 seconds.
+3. `appearance.wearItems` with the same id. Leave `replace` off, so nothing else comes off.
+
+Do this once per item when you're done editing it, not after every call. Re-wearing in place or
+rebaking textures is not a substitute. If RLV locks the item, the detach is refused: tell the user
+the edit may not be saved until the item can come off.
+
 ## Building objects
 
 The usual loop: upload → `object.rez` (or `object.attach` to work on it worn) → `object.get` →
@@ -94,7 +111,7 @@ The usual loop: upload → `object.rez` (or `object.attach` to work on it worn) 
   few seconds and it works.
 - No-copy textures and items move into the object, as a manual drop does, and leave inventory.
 - Worn objects can be edited, textured and filled, but `object.setPermissions` refuses them:
-  rez the object first.
+  rez the object first. Finish worn edits with the detach, wait, attach routine above.
 - Ask before editing or taking an object you didn't rez in this session. Owning it doesn't mean
   the user wants it changed.
 - A timeout that says the request "was sent" may still have worked. Check with `object.get`,
