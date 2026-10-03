@@ -29,7 +29,7 @@ root for the written reference. By area:
 | Health | `ping` | Liveness check |
 | Viewer | `viewer.notify` | Post a toast to get the user's attention (persistent by default; `tip:true` = fades) |
 | RLV | `rlv.getStatus`, `rlv.getRestrictions`, `rlv.canDo` | See what's restricted **before** acting |
-| Inventory | `inventory.getFolder`/`getItem`/`search`/`createFolder`/`rename`/`move`/`delete`/`giveItem`/`giveFolder`/`createItem`/`refresh` | Browse, organize, give |
+| Inventory | `inventory.getFolder`/`getItem`/`search`/`createFolder`/`rename`/`move`/`copy`/`delete`/`giveItem`/`giveFolder`/`createItem`/`refresh` | Browse, organize, give |
 | Notecards/Scripts | `notecard.read`/`write`, `script.read`/`write` | Read/edit item contents; scripts compile (mono/lsl2/luau/lsl-luau) |
 | Appearance | `appearance.wearItems`/`detachItems`/`wearOutfit`/`listOutfits`/`getWorn` | Wear/remove, outfits |
 | Gestures | `gesture.list`/`read`/`create`/`write`/`activate`/`deactivate`/`play` | Author gestures (trigger, key bind, animation/sound/chat/wait steps); activate and fire them |
@@ -44,7 +44,7 @@ root for the written reference. By area:
 | Notifications | `notifications.list`/`respond` | Answer offers (items/teleport/friendship/group) + blue-menu dialogs |
 | Groups | `group.list`/`getInfo`/`activate`/`sendIM`/`getNotices`/`sendNotice` | Group chat + notices |
 | Uploads | `upload.image`/`sound`/`animation`/`material`/`mesh` | Upload assets (cost L$ — see below) |
-| Building | `object.rez`/`attach`/`get`/`edit`/`setFaces`/`contents`/`addContents`/`setPermissions`/`link`/`unlink`/`take` | Turn uploads into finished items without the Build floater (see below) |
+| Building | `object.rez`/`attach`/`get`/`edit`/`setFaces`/`contents`/`addContents`/`copyContents`/`removeContents`/`setPermissions`/`link`/`unlink`/`take` | Turn uploads into finished items without the Build floater (see below) |
 | Money | `money.getBalance`/`pay` | Check balance; pay L$ (pay is fenced — see below) |
 
 ## RLV restrictions are HARD-enforced
@@ -110,6 +110,9 @@ The usual loop: upload → `object.rez` (or `object.attach` to work on it worn) 
 - "the item hasn't finished loading; try again" asks the viewer to fetch the item. Retry after a
   few seconds and it works.
 - No-copy textures and items move into the object, as a manual drop does, and leave inventory.
+- `object.removeContents` deletes items outright; they don't go to Trash. Copy anything the user
+  might want back with `object.copyContents` first, and ask before deleting from an object you
+  didn't fill in this session.
 - Worn objects can be edited, textured and filled, but `object.setPermissions` refuses them:
   rez the object first. Finish worn edits with the detach, wait, attach routine above.
 - Ask before editing or taking an object you didn't rez in this session. Owning it doesn't mean
