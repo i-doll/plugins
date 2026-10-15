@@ -1,6 +1,6 @@
 ---
 name: firestorm-avatar
-description: Use when driving the user's Second Life avatar through the Firestorm viewer — moving (teleport/sit/stand), seeing (viewport snapshot), searching the world, browsing/organizing/wearing inventory, giving items, authoring gestures and wearables (clothing, tattoos, body shapes), editing your own profile and viewing others', inspecting nearby avatars, 1:1 IM and group chat/notices, answering offers/dialogs, touching in-world objects, uploading assets (images, sounds, animations, materials, mesh), building with objects (rez, attach, edit, texture, fill contents, set next-owner permissions, link, take), and paying L$. All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
+description: Use when driving the user's Second Life avatar through the Firestorm viewer — moving (teleport/sit/stand), seeing (viewport snapshot), searching the world, browsing/organizing/wearing inventory, giving items, authoring gestures and wearables (clothing, tattoos, body shapes), editing your own profile and viewing others', inspecting nearby avatars, 1:1 IM and group chat/notices, answering offers/dialogs, touching in-world objects, uploading assets (images, sounds, animations, materials, mesh), building with objects (create prims, rez, attach, edit, texture, fill contents, set next-owner permissions, link, take), and paying L$. All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
 ---
 
 # Driving the Firestorm avatar
@@ -44,7 +44,7 @@ root for the written reference. By area:
 | Notifications | `notifications.list`/`respond` | Answer offers (items/teleport/friendship/group) + blue-menu dialogs |
 | Groups | `group.list`/`getInfo`/`activate`/`sendIM`/`getNotices`/`sendNotice` | Group chat + notices |
 | Uploads | `upload.image`/`sound`/`animation`/`material`/`mesh` | Upload assets (cost L$ — see below) |
-| Building | `object.rez`/`attach`/`get`/`edit`/`setFaces`/`contents`/`addContents`/`copyContents`/`removeContents`/`setPermissions`/`link`/`unlink`/`take` | Turn uploads into finished items without the Build floater (see below) |
+| Building | `object.create`/`rez`/`attach`/`get`/`edit`/`setFaces`/`contents`/`addContents`/`copyContents`/`removeContents`/`setPermissions`/`link`/`unlink`/`take` | Turn uploads into finished items without the Build floater (see below) |
 | Money | `money.getBalance`/`pay` | Check balance; pay L$ (pay is fenced — see below) |
 
 ## RLV restrictions are HARD-enforced
@@ -58,7 +58,7 @@ advisory — the action does not happen.
 - Common gates: `@showinv` (inventory browse), `@detach`/wearable locks (appearance),
   `@shownames` (others' names/profiles), `@viewnote`/`@viewscript` (contents), `@edit`
   (authoring gestures/wearables — a fork extension of `@edit` to inventory content),
-  `@sendgesture` (gesture.play), `@rez` (object.rez/take), `@addattach` (object.attach), `@shownearby`
+  `@sendgesture` (gesture.play), `@rez` (object.create/rez/take), `@addattach` (object.attach), `@shownearby`
   (nearby avatars), `@showsearch` (search), `@share` (giving), `@setgroup` (group activate),
   `@tplm`/`@tploc`/`@tplocal` (teleport), `@sit`/`@unsit` (sit/stand), `@touchworld`/`@touchall`/
   `@interact` (object.touch), `@sendim`/`@recvim` (IM), `@pay`/`@buy` (money.pay).
@@ -103,8 +103,11 @@ the edit may not be saved until the item can come off.
 
 The usual loop: upload → `object.rez` (or `object.attach` to work on it worn) → `object.get` →
 `object.edit` / `object.setFaces` / `object.addContents` → `object.setPermissions` → `object.take`.
+To build from scratch, start with `object.create` instead of an upload: it makes a plain prim
+(box, cylinder, sphere, torus and the rest of the Build floater's shapes) at the position, scale and
+rotation you give, then `object.link` the prims into one object.
 
-- Leave out `position` on `object.rez` and it lands 2 m in front of the avatar. Region
+- Leave out `position` on `object.rez` or `object.create` and it lands 2 m in front of the avatar. Region
   coordinates you pick yourself are easy to put behind the user.
 - Take link numbers and face counts from `object.get`; they can differ from LSL link numbers.
 - "the item hasn't finished loading; try again" asks the viewer to fetch the item. Retry after a
