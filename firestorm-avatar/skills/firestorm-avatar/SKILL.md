@@ -39,7 +39,7 @@ root for the written reference. By area:
 | Nearby | `avatars.getNearby`, `avatars.getWorn` | Who's around, where they are & which way they face, what they have attached |
 | Movement & world | `objects.getNearby`, `movement.teleport`/`walkTo`/`turn`/`sit`/`stand`, `agent.getLocation`, `object.touch` | Find nearby objects, go somewhere (teleport or walk), turn in place, sit, know where you are, operate objects |
 | Animation (AO) | `ao.getStatus`/`setEnabled`/`selectSet`/`cycle` | Firestorm client-side animation overlay |
-| Vision & HUD | `vision.snapshot`, `hud.click` | See the scene (snapshot; `show_hud:true` includes HUD overlays), click a HUD button by screen coordinate |
+| Vision & HUD | `vision.snapshot`, `camera.set`/`get`/`clear`, `hud.click` | See the scene (snapshot; `show_hud:true` includes HUD overlays), look from your own camera without moving the user's, click a HUD button by screen coordinate |
 | IM (1:1) | `im.send`/`replies`/`getConversations`/`getMessages` | Private person-to-person messaging |
 | Notifications | `notifications.list`/`respond` | Answer offers (items/teleport/friendship/group) + blue-menu dialogs |
 | Groups | `group.list`/`getInfo`/`activate`/`sendIM`/`getNotices`/`sendNotice` | Group chat + notices |
@@ -152,6 +152,13 @@ appear; say so if nothing matches.
   overlays (the viewer UI itself stays hidden); then `hud.click {x, y}` presses a HUD button by
   **normalized 0..1 top-left coordinate** — aim by where the button sits in that screenshot.
   (`hud.click` only hits HUDs; use `object.touch` for in-world objects.)
+- **Looking from somewhere else.** The user's camera is theirs — don't wait for them to point it.
+  `camera.set {object_id}` (or `avatar_id` / `global_position`) places your own camera, framed on
+  the target from the side facing you; add `yaw_deg` to walk around it (0=East, 90=North),
+  `pitch_deg` to look down on it, `distance` to back off. Then `vision.snapshot {camera:"agent"}`.
+  The user's view doesn't move. It only sees what the viewer has loaded around the **user's**
+  camera, and far-off detail can be blurry or low-poly. RLV camera distance limits apply from your
+  head; a refusal's `limit_m` tells you how close to come. `camera.clear` when done.
 - **Finding things to interact with.** `objects.getNearby` lists rezzed in-world objects (seats,
   vendors, furniture) with their `object_id`, name, and distance — this is how you get the ids that
   `object.touch`, `movement.sit`, and `movement.walkTo` need. `scripted_only:true` cuts scenery

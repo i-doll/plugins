@@ -13,7 +13,7 @@ Custom fork (`ID` prefix). An in-process MCP server that lets an AI agent drive 
 
 Every mutating or identity-revealing tool passes a single RLV gate. A blocked call returns JSON-RPC error `-32011` with `{restriction, sources:[{object_id,root_id,attach_pt,name}], checkedAt}`. Use `rlv.getRestrictions` to see what's active and `rlv.canDo` to check a call before making it.
 
-**98 tools** across 23 areas.
+**101 tools** across 23 areas.
 
 ## Health
 
@@ -173,7 +173,10 @@ Embodiment: find things around you, move to/among them, know where you are, and 
 
 | Tool | Params | Description |
 |---|---|---|
-| `vision.snapshot` | `width`: integer<br>`height`: integer<br>`hide_ui`: boolean<br>`show_hud`: boolean<br>`format`: jpeg \| png<br>`quality`: integer<br>`to_file`: boolean | Render the current 3D view as an image you can look at — the avatar's eyes. `width` default 1024 (256–2048), `height` from window aspect, `hide_ui` default true, `format` jpeg (default)/png, `quality` (jpeg) default 80. `show_hud:true` includes your HUD overlays (the viewer UI itself stays hidden) — use it to see HUD buttons before `hud.click`. Returns `{format, width, height, image_base64}`, or `{..., path}` with `to_file:true`. No RLV gate (own view). |
+| `vision.snapshot` | `width`: integer<br>`height`: integer<br>`hide_ui`: boolean<br>`show_hud`: boolean<br>`format`: jpeg \| png<br>`quality`: integer<br>`to_file`: boolean<br>`camera`: user \| agent | Render the current 3D view as an image you can look at — the avatar's eyes. `width` default 1024 (256–2048), `height` from window aspect, `hide_ui` default true, `format` jpeg (default)/png, `quality` (jpeg) default 80. `show_hud:true` includes your HUD overlays (the viewer UI itself stays hidden) — use it to see HUD buttons before `hud.click`. `camera:"agent"` renders from your own camera (see `camera.set`) instead of the user's view; UI and HUDs are never shown in it. Returns `{format, width, height, image_base64}`, or `{..., path}` with `to_file:true`. No RLV gate on the user's view; the agent camera re-checks its RLV limits on every shot. |
+| `camera.set` | `object_id`: string<br>`avatar_id`: string<br>`global_position`: number[3]<br>`eye`: number[3]<br>`distance`: number<br>`yaw_deg`: number<br>`pitch_deg`: number<br>`fov_deg`: number | Place your own camera, separate from the user's — it never moves their view. Aim at **exactly one** of `object_id`, `avatar_id` or `global_position`. Then give `eye` (global `[x,y,z]`) or orbit the target: `distance` (default frames the whole target), `yaw_deg` (which side of the target the camera sits on, as a heading from it: 0=East, 90=North; default the side facing you, or in front of you when the target is you), `pitch_deg` (above the target, default 15). `fov_deg` is vertical, default the user's. Returns `{set, eye, target, distance, yaw_deg, pitch_deg, fov_deg}`. The pose stays until the next `camera.set` or `camera.clear`. Blocked by RLV camera distance limits (`@camdistmax`/`@setcam_avdistmax`/`@setcam_origindistmax` and their mins, measured from your head; the error's `limit_m` gives the limit) and by `@setcam_unlock` unless the target is you. |
+| `camera.get` | — | Your camera's pose: `{set:false}`, or the same shape `camera.set` returns. |
+| `camera.clear` | — | Remove your camera. Returns `{set:false}`. |
 
 ## Animation overlay (AO)
 
