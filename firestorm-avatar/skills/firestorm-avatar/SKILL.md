@@ -19,6 +19,21 @@ non-blocking — long operations stream their result back over SSE.
   full control of the avatar.
 - Tools refuse before login with `-32003 NOT_LOGGED_IN`.
 
+## Check the grid at the start of every turn
+
+Call `viewer.getGrid` at the start of **every** turn, before any other tool. The user can log
+out and back in to a different grid between turns, so the answer from an earlier turn may be
+wrong now.
+
+- **`agni`** is the main Second Life grid. L$ is real money, inventory is the user's real
+  inventory, and the people are real. Payments, uploads, deletes and gives here are for real.
+- **`aditi`** is the Second Life beta grid, for testing. Uploads and payments still cost L$, but
+  it's test money and accounts get plenty of it, so spending it is fine. Nothing done there
+  (items, uploads, L$) carries over to the main grid.
+- **`other`** is a non-Linden grid such as OpenSim.
+
+If the grid isn't the one you expected for the task, stop and tell the user before acting.
+
 ## What you can do (tool areas)
 
 Call `tools/list` for exact parameters, or see `MCP_TOOLS.md` in the `phoenix-firestorm` repo
@@ -27,7 +42,7 @@ root for the written reference. By area:
 | Area | Tools | Use for |
 |---|---|---|
 | Health | `ping` | Liveness check |
-| Viewer | `viewer.notify` | Post a toast to get the user's attention (persistent by default; `tip:true` = fades) |
+| Viewer | `viewer.getGrid`, `viewer.notify` | Confirm which grid you're on (every turn — see above); post a toast to get the user's attention (persistent by default; `tip:true` = fades) |
 | RLV | `rlv.getStatus`, `rlv.getRestrictions`, `rlv.canDo` | See what's restricted **before** acting |
 | Inventory | `inventory.getFolder`/`getItem`/`search`/`createFolder`/`rename`/`move`/`copy`/`delete`/`giveItem`/`giveFolder`/`createItem`/`refresh` | Browse, organize, give |
 | Notecards/Scripts | `notecard.read`/`write`, `script.read`/`write` | Read/edit item contents; scripts compile (mono/lsl2/luau/lsl-luau) |
