@@ -1,6 +1,6 @@
 ---
 name: firestorm-avatar
-description: Use when driving the user's Second Life avatar through the Firestorm viewer — moving (teleport/sit/stand), seeing (viewport snapshot), searching the world, browsing/organizing/wearing inventory, giving items, authoring gestures and wearables (clothing, tattoos, body shapes), editing your own profile and viewing others', inspecting nearby avatars, 1:1 IM and group chat/notices, answering offers/dialogs, touching in-world objects, uploading assets (images, sounds, animations, materials, mesh), building with objects (create prims, rez, attach, edit, texture, fill contents, set next-owner permissions, link, take), and paying L$. All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
+description: Use when driving the user's Second Life avatar through the Firestorm viewer — moving (teleport/sit/stand), seeing (viewport snapshot), searching the world, browsing/organizing/wearing inventory, giving items, setting next-owner permissions on items, authoring gestures and wearables (clothing, tattoos, body shapes), editing your own profile and viewing others', inspecting nearby avatars, 1:1 IM and group chat/notices, answering offers/dialogs, touching in-world objects, uploading assets (images, sounds, animations, materials, mesh), building with objects (create prims, rez, attach, edit, texture, fill contents, set next-owner permissions, link, take), and paying L$. All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
 ---
 
 # Driving the Firestorm avatar
@@ -44,7 +44,7 @@ root for the written reference. By area:
 | Health | `ping` | Liveness check |
 | Viewer | `viewer.getGrid`, `viewer.notify` | Confirm which grid you're on (every turn — see above); post a toast to get the user's attention (persistent by default; `tip:true` = fades) |
 | RLV | `rlv.getStatus`, `rlv.getRestrictions`, `rlv.canDo` | See what's restricted **before** acting |
-| Inventory | `inventory.getFolder`/`getItem`/`search`/`createFolder`/`rename`/`move`/`copy`/`delete`/`giveItem`/`giveFolder`/`createItem`/`refresh` | Browse, organize, give |
+| Inventory | `inventory.getFolder`/`getItem`/`search`/`createFolder`/`rename`/`move`/`copy`/`delete`/`giveItem`/`giveFolder`/`createItem`/`refresh`/`setPermissions` | Browse, organize, give, set next-owner permissions |
 | Notecards/Scripts | `notecard.read`/`write`, `script.read`/`write` | Read/edit item contents; scripts compile (mono/lsl2/luau/lsl-luau) |
 | Appearance | `appearance.wearItems`/`detachItems`/`wearOutfit`/`listOutfits`/`getWorn` | Wear/remove, outfits |
 | Gestures | `gesture.list`/`read`/`create`/`write`/`activate`/`deactivate`/`play` | Author gestures (trigger, key bind, animation/sound/chat/wait steps); activate and fire them |
@@ -132,7 +132,10 @@ rotation you give, then `object.link` the prims into one object.
   might want back with `object.copyContents` first, and ask before deleting from an object you
   didn't fill in this session.
 - Worn objects can be edited, textured and filled, but `object.setPermissions` refuses them:
-  rez the object first. Finish worn edits with the detach, wait, attach routine above.
+  rez the object first.
+- For anything already in inventory (an uploaded texture, a notecard, a taken object), set
+  next-owner permissions with `inventory.setPermissions`; there's no need to rez it. New items
+  default to the user's viewer settings, which are often not what a product needs. Finish worn edits with the detach, wait, attach routine above.
 - Ask before editing or taking an object you didn't rez in this session. Owning it doesn't mean
   the user wants it changed.
 - A timeout that says the request "was sent" may still have worked. Check with `object.get`,

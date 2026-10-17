@@ -13,7 +13,7 @@ Custom fork (`ID` prefix). An in-process MCP server that lets an AI agent drive 
 
 Every mutating or identity-revealing tool passes a single RLV gate. A blocked call returns JSON-RPC error `-32011` with `{restriction, sources:[{object_id,root_id,attach_pt,name}], checkedAt}`. Use `rlv.getRestrictions` to see what's active and `rlv.canDo` to check a call before making it.
 
-**102 tools** across 23 areas.
+**103 tools** across 23 areas.
 
 ## Health
 
@@ -65,6 +65,7 @@ Talk to in-world scripted objects, HUDs, vendors, and **RLV relays** on any chan
 | `inventory.refresh` | `item_id*`: string | Force a fresh server fetch of an inventory item's metadata ({"item_id"}) — e.g. to pick up a rename/move made elsewhere. Returns {refreshed, has_asset}. Scripts/notecards carry no local asset id (resolved server-side on read), so has_asset is false for them even though they read fine. |
 | `inventory.rename` | `id*`: string<br>`name*`: string | Rename an inventory item or folder. {"id"} and {"name"}. |
 | `inventory.search` | `name*`: string<br>`limit`: integer | Search loaded inventory by name substring. {"name"} required; optional {"limit"} (default 100, max 500). Blocked by RLV @showinv. |
+| `inventory.setPermissions` | `item_ids*`: string[]<br>`next_owner*`: {`copy`, `modify`, `transfer`}: boolean | Set next-owner permissions on items in your inventory, as the item's Properties window does. A link sets the item it points to. The next owner needs copy or transfer, so turning copy off keeps transfer on; bits missing from the item's base permissions stay off. Returns `{items:[{item_id, name, result, next_owner}]}`, where `result` is `set` (the server confirmed it), `unchanged`, `failed` (the server kept the old permissions), `not_found`, `not_loaded` (load it with `inventory.getItem` first) or `permission` (you don't own it, can't transfer it, or its permissions can't be restricted). |
 
 ## Notecards
 
