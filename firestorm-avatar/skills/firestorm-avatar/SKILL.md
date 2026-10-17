@@ -1,6 +1,6 @@
 ---
 name: firestorm-avatar
-description: Use when driving the user's Second Life avatar through the Firestorm viewer — moving (teleport/sit/stand), seeing (viewport snapshot), searching the world, browsing/organizing/wearing inventory, giving items, setting next-owner permissions on items, authoring gestures and wearables (clothing, tattoos, body shapes), editing your own profile and viewing others', inspecting nearby avatars, 1:1 IM and group chat/notices, answering offers/dialogs, touching in-world objects, uploading assets (images, sounds, animations, materials, mesh), building with objects (create prims, rez, attach, edit, texture, fill contents, set next-owner permissions, link, take), and paying L$. All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
+description: Use when driving the user's Second Life avatar through the Firestorm viewer — moving (teleport/sit/stand), seeing (viewport snapshot), searching the world, browsing/organizing/wearing inventory, giving items, setting next-owner permissions on items, authoring gestures and wearables (clothing, tattoos, body shapes), editing your own profile and viewing others', inspecting nearby avatars, 1:1 IM and group chat/notices, answering offers/dialogs, touching in-world objects, uploading assets (images, sounds, animations, materials, mesh), building with objects (create prims, rez, attach, edit, texture, fill contents, set script experiences, set next-owner permissions, link, take), and paying L$. All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
 ---
 
 # Driving the Firestorm avatar
@@ -59,7 +59,7 @@ root for the written reference. By area:
 | Notifications | `notifications.list`/`respond` | Answer offers (items/teleport/friendship/group) + blue-menu dialogs |
 | Groups | `group.list`/`getInfo`/`activate`/`sendIM`/`getNotices`/`sendNotice` | Group chat + notices |
 | Uploads | `upload.image`/`sound`/`animation`/`material`/`mesh` | Upload assets (cost L$ — see below) |
-| Building | `object.create`/`rez`/`attach`/`get`/`edit`/`setFaces`/`contents`/`addContents`/`copyContents`/`removeContents`/`setPermissions`/`link`/`unlink`/`take` | Turn uploads into finished items without the Build floater (see below) |
+| Building | `object.create`/`rez`/`attach`/`get`/`edit`/`setFaces`/`contents`/`addContents`/`copyContents`/`removeContents`/`setScriptExperience`/`setPermissions`/`link`/`unlink`/`take` | Turn uploads into finished items without the Build floater (see below) |
 | Money | `money.getBalance`/`pay` | Check balance; pay L$ (pay is fenced — see below) |
 
 ## RLV restrictions are HARD-enforced
@@ -131,6 +131,11 @@ rotation you give, then `object.link` the prims into one object.
 - `object.removeContents` deletes items outright; they don't go to Trash. Copy anything the user
   might want back with `object.copyContents` first, and ask before deleting from an object you
   didn't fill in this session.
+- To put a script in an object under an experience, add it with `object.addContents`, then call
+  `object.setScriptExperience` with its id from `object.contents`. This recompiles and resets the
+  script. Pass `running:false` for a script that should stay stopped, and `target` for a Luau
+  script. Ask the user which experience to use; if the one you pass is refused, the
+  error lists the ones they can use.
 - Worn objects can be edited, textured and filled, but `object.setPermissions` refuses them:
   rez the object first.
 - For anything already in inventory (an uploaded texture, a notecard, a taken object), set
