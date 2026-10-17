@@ -13,7 +13,7 @@ Custom fork (`ID` prefix). An in-process MCP server that lets an AI agent drive 
 
 Every mutating or identity-revealing tool passes a single RLV gate. A blocked call returns JSON-RPC error `-32011` with `{restriction, sources:[{object_id,root_id,attach_pt,name}], checkedAt}`. Use `rlv.getRestrictions` to see what's active and `rlv.canDo` to check a call before making it.
 
-**101 tools** across 23 areas.
+**102 tools** across 23 areas.
 
 ## Health
 
@@ -26,6 +26,7 @@ Every mutating or identity-revealing tool passes a single RLV gate. A blocked ca
 | Tool | Params | Description |
 |---|---|---|
 | `viewer.notify` | `text*`: string<br>`title`: string<br>`tip`: boolean | Post a toast to the viewer to get the user's attention. `text` is the body; optional `title` shows on the first line. Default is a persistent notify toast (stays until dismissed, kept in the notification well); `tip:true` gives a lighter toast that fades on its own. |
+| `viewer.getGrid` | — | **Call at the start of every turn, before any other tool** — the user can relog onto another grid between turns. Which grid the user is logged in to: `grid` is `agni` (the main Second Life grid: real L$, real inventory, real people), `aditi` (the Second Life beta grid, for testing: its L$ is test money and accounts get plenty of it, so spending it is fine; nothing there carries over to the main grid), or `other` (e.g. OpenSim); `label` is the grid's display name. |
 
 ## Chat (in-world, via LSL bridge)
 
