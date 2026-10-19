@@ -59,7 +59,7 @@ root for the written reference. By area:
 | Notifications | `notifications.list`/`respond` | Answer offers (items/teleport/friendship/group) + blue-menu dialogs |
 | Groups | `group.list`/`getInfo`/`activate`/`sendIM`/`getNotices`/`sendNotice` | Group chat + notices |
 | Uploads | `upload.image`/`sound`/`animation`/`material`/`mesh` | Upload assets (cost L$ — see below) |
-| Building | `object.create`/`rez`/`attach`/`get`/`edit`/`setFaces`/`contents`/`addContents`/`copyContents`/`removeContents`/`setScriptExperience`/`setPermissions`/`link`/`unlink`/`take` | Turn uploads into finished items without the Build floater (see below) |
+| Building | `object.create`/`rez`/`attach`/`get`/`edit`/`setFaces`/`contents`/`addContents`/`copyContents`/`removeContents`/`setScriptExperience`/`setPermissions`/`link`/`unlink`/`take`, `experience.list` | Turn uploads into finished items without the Build floater (see below) |
 | Money | `money.getBalance`/`pay` | Check balance; pay L$ (pay is fenced — see below) |
 
 ## RLV restrictions are HARD-enforced
@@ -134,8 +134,8 @@ rotation you give, then `object.link` the prims into one object.
 - To put a script in an object under an experience, add it with `object.addContents`, then call
   `object.setScriptExperience` with its id from `object.contents`. This recompiles and resets the
   script. Pass `running:false` for a script that should stay stopped, and `target` for a Luau
-  script. Ask the user which experience to use; if the one you pass is refused, the
-  error lists the ones they can use.
+  script. `experience.list` gives the experiences the user can compile
+  for; ask which one if the user didn't say.
 - Worn objects can be edited, textured and filled, but `object.setPermissions` refuses them:
   rez the object first.
 - For anything already in inventory (an uploaded texture, a notecard, a taken object), set
