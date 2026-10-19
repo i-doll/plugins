@@ -131,11 +131,13 @@ rotation you give, then `object.link` the prims into one object.
 - `object.removeContents` deletes items outright; they don't go to Trash. Copy anything the user
   might want back with `object.copyContents` first, and ask before deleting from an object you
   didn't fill in this session.
-- To put a script in an object under an experience, add it with `object.addContents`, then call
+- To put a script in an object under an experience, add it stopped with `object.addContents`
+  (`running:false`) so it doesn't run without the experience, then call
   `object.setScriptExperience` with its id from `object.contents`. This recompiles and resets the
-  script. Pass `running:false` for a script that should stay stopped, and `target` for a Luau
-  script. `experience.list` gives the experiences the user can compile
-  for; ask which one if the user didn't say.
+  script and starts it; pass `running:false` if it should stay stopped. It compiles as Mono unless
+  you pass `target`, so pass `lsl2` or the Luau target for a script that isn't Mono.
+  `experience.list` gives the experiences the user can compile for; ask which one if the user
+  didn't say.
 - Worn objects can be edited, textured and filled, but `object.setPermissions` refuses them:
   rez the object first.
 - For anything already in inventory (an uploaded texture, a notecard, a taken object), set
