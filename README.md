@@ -9,6 +9,7 @@
 | **`dev-team`** | Reusable role agents — product owner, autonomous senior developer, QA, designer, and changelog editor — sharing a work-queue handoff protocol, plus the changelog house-style skill. |
 | **`travel-team`** | Five travel-planning role agents — gem-scout, mustsee-scout, bookings, food, and concierge — sharing a trip-dossier skill so their sourced research composes into a loose menu of a trip. |
 | **`ste100`** | ASD-STE100 Simplified Technical English as a skill — write documentation in the controlled language, or audit existing docs against its 53 rules. |
+| **`todo`** | Queue work for after the current task: `/todo:add`, `/todo:add-top`, `/todo:list`, and a Stop hook that hands the agent the next item. |
 
 This repo is both the marketplace (`.claude-plugin/marketplace.json`) and the plugins themselves.
 
@@ -21,6 +22,7 @@ claude plugin install mpsearch@idoll
 claude plugin install dev-team@idoll
 claude plugin install travel-team@idoll
 claude plugin install ste100@idoll
+claude plugin install todo@idoll
 ```
 
 See [`firestorm-avatar/README.md`](firestorm-avatar/README.md) for the viewer-side requirements
@@ -70,11 +72,17 @@ plugins/
 │   ├── agents/{bookings,concierge,food,gem-scout,mustsee-scout}.md
 │   ├── skills/trip-dossier/SKILL.md
 │   └── README.md
-└── ste100/
+├── ste100/
+│   ├── .claude-plugin/plugin.json
+│   ├── skills/simplified-technical-english/
+│   │   ├── SKILL.md                    # the 53 rules + write/audit modes
+│   │   └── references/word-choice.md   # swaps, POS traps, technical verbs
+│   └── README.md
+└── todo/
     ├── .claude-plugin/plugin.json
-    ├── skills/simplified-technical-english/
-    │   ├── SKILL.md                    # the 53 rules + write/audit modes
-    │   └── references/word-choice.md   # swaps, POS traps, technical verbs
+    ├── bin/todo.mjs                    # add, add-top, list, stop-hook
+    ├── commands/{add,add-top,list}.md
+    ├── hooks/hooks.json                # Stop hook -> next item on the list
     └── README.md
 ```
 

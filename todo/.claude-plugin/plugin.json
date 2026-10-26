@@ -1,0 +1,11 @@
+{
+  "name": "todo",
+  "displayName": "Todo",
+  "description": "Queue work for after the current task. /todo:add and /todo:add-top write to a markdown list in the project, /todo:list shows it, and a Stop hook hands the agent the top item each time it finishes.",
+  "version": "0.1.0",
+  "author": {
+    "name": "i-doll",
+    "url": "https://github.com/i-doll"
+  },
+  "keywords": ["todo", "queue", "tasks", "hooks"]
+}
