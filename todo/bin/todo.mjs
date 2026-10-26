@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFile, writeFile, mkdir, appendFile } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, appendFile, lstat } from 'node:fs/promises';
 import { dirname, join, relative } from 'node:path';
 import { tmpdir } from 'node:os';
 import { execFileSync } from 'node:child_process';
@@ -26,6 +26,15 @@ async function read(path) {
     if (cause.code === 'ENOENT') return null;
     throw cause;
   }
+}
+
+async function untrusted(root) {
+  for (const part of ['.claude', ENTRY]) {
+    const info = await lstat(join(root, part)).catch(() => null);
+    if (info?.isSymbolicLink()) return `${part} is a symlink`;
+  }
+  if (git(root, 'ls-files', '--error-unmatch', ENTRY) !== null) return `${ENTRY} is tracked by git, so it came with the repository`;
+  return null;
 }
 
 async function ignore(cwd) {
@@ -67,6 +76,8 @@ async function add(cwd, top) {
   if (!input) die('Nothing to add: pass the item as arguments or on stdin.');
   const root = rootOf(cwd);
   const path = join(root, ENTRY);
+  const problem = await untrusted(root);
+  if (problem) die(`Not using the todo list: ${problem}.`);
   let text = await read(path);
   if (text === null) {
     await mkdir(dirname(path), { recursive: true });
@@ -84,8 +95,10 @@ async function add(cwd, top) {
 }
 
 async function list(cwd) {
-  const path = join(rootOf(cwd), ENTRY);
-  const text = await read(path);
+  const root = rootOf(cwd);
+  const problem = await untrusted(root);
+  if (problem) die(`Not using the todo list: ${problem}.`);
+  const text = await read(join(root, ENTRY));
   const found = text === null ? [] : items(text);
   if (!found.length) return console.log('The todo list is empty.');
   console.log(found.map((item, n) => item.text.replace(/^- /, `${n + 1}. `)).join('\n'));
@@ -94,7 +107,9 @@ async function list(cwd) {
 async function stop() {
   const event = JSON.parse(await stdin() || '{}');
   const cwd = event.cwd ?? process.cwd();
-  const path = join(rootOf(cwd), ENTRY);
+  const root = rootOf(cwd);
+  if (await untrusted(root)) return;
+  const path = join(root, ENTRY);
   const text = await read(path);
   const queue = text === null ? [] : items(text);
   const next = queue[0];
