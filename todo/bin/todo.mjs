@@ -81,9 +81,9 @@ async function add(cwd, top) {
   let text = await read(path);
   if (text === null) {
     await mkdir(dirname(path), { recursive: true });
-    await ignore(root);
     text = HEADER;
   }
+  await ignore(root);
   const entry = format(input);
   const existing = items(text);
   const lines = text.replace(/\n*$/, '').split('\n');
