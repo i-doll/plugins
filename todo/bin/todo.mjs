@@ -56,6 +56,7 @@ function format(input) {
 
 async function stdin() {
   if (process.stdin.isTTY) return '';
+  process.stdin.setEncoding('utf8');
   let data = '';
   for await (const chunk of process.stdin) data += chunk;
   return data;
@@ -95,11 +96,13 @@ async function stop() {
   const cwd = event.cwd ?? process.cwd();
   const path = join(rootOf(cwd), ENTRY);
   const text = await read(path);
-  const next = text === null ? undefined : items(text)[0];
+  const queue = text === null ? [] : items(text);
+  const next = queue[0];
   const marker = join(tmpdir(), `claude-todo-${(event.session_id ?? 'default').replace(/[^\w-]/g, '')}`);
   if (!next) return;
-  if (event.stop_hook_active && (await read(marker)) === next.text) return;
-  await writeFile(marker, next.text);
+  const state = `${queue.length}\n${next.text}`;
+  if (event.stop_hook_active && (await read(marker)) === state) return;
+  await writeFile(marker, state);
   const reason = [
     `The todo list at ${path} has items waiting. If you stopped to ask the user something, or your current task isn't finished, stop now and leave the list alone.`,
     'Otherwise take the top item now:',
