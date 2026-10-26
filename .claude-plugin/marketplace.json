@@ -40,6 +40,11 @@
       "name": "ste100",
       "source": "./ste100",
       "description": "Write and audit documentation in ASD-STE100 Simplified Technical English, the controlled language used for aerospace and defence technical publications. Carries all 53 writing rules of Issue 9 and the eight general recommendations, keyed to their real rule numbers, plus a word-choice reference for software documentation — including the technical-verb category that makes click, delete, install and validate legal STE, which naive guides get wrong."
+    },
+    {
+      "name": "todo",
+      "source": "./todo",
+      "description": "Queue work for after the current task. /todo:add and /todo:add-top write to a markdown list in the project, /todo:list shows it, and a Stop hook hands the agent the top item each time it finishes."
     }
   ]
 }
