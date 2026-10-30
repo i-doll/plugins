@@ -18,6 +18,8 @@ non-blocking — long operations stream their result back over SSE.
   `IDMCPServerPort` (default 33777). Loopback only, no auth — enabling grants any local process
   full control of the avatar.
 - Tools refuse before login with `-32003 NOT_LOGGED_IN`.
+- To test in-world with your own avatar instead of the user's, launch a headless viewer; see the
+  `firestorm-headless` skill.
 
 ## Check the grid at the start of every turn
 

@@ -9,10 +9,11 @@ inspection, bridge-mediated in-world chat / RLV relays, and guarded L$ payments.
 ## What's in here
 
 - **`.mcp.json`** — registers the `firestorm` MCP server (`http://127.0.0.1:33777/mcp`).
-- **`skills/`** — three skills:
+- **`skills/`** — four skills:
   - `firestorm-avatar` — the main avatar-driving guide (all tool areas, RLV enforcement, gotchas).
   - `firestorm-chat` — talking to in-world scripted objects on any channel via the LSL bridge.
   - `firestorm-rlv-relay` — the RLV Relay protocol over the bridge.
+  - `firestorm-headless` — launching the viewer with `--headless` to test in-world with your own avatar.
 - **`MCP_TOOLS.md`** — snapshot of the full tool reference.
 
 ## Requirements (the server side is NOT in this plugin)
