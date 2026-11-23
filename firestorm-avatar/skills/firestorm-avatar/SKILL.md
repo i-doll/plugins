@@ -1,6 +1,6 @@
 ---
 name: firestorm-avatar
-description: Use when driving the user's Second Life avatar through the Firestorm viewer — moving (teleport/sit/stand), seeing (viewport snapshot), searching the world, browsing/organizing/wearing inventory, giving items, setting next-owner permissions on items, authoring gestures and wearables (clothing, tattoos, body shapes), editing your own profile and viewing others', inspecting nearby avatars, 1:1 IM and group chat/notices, answering offers/dialogs, touching in-world objects, uploading assets (images, sounds, animations, materials, mesh), building with objects (create prims, rez, attach, edit, texture, fill contents, set script experiences, set next-owner permissions, link, take), and paying L$. All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
+description: Use when driving the user's Second Life avatar through the Firestorm viewer — moving (teleport/sit/stand), seeing (viewport snapshot), searching the world, browsing/organizing/wearing inventory, giving items, setting next-owner permissions on items, authoring gestures and wearables (clothing, tattoos, body shapes), editing your own profile and viewing others', inspecting nearby avatars, 1:1 IM and group chat/notices, answering offers/dialogs, touching in-world objects, uploading assets (images, sounds, animations, materials, mesh), building with objects (create prims, rez, attach, drop, duplicate, edit, texture, fill and edit contents, reset scripts, set script experiences, set permissions, link, take), and paying L$. All actions respect RLV restrictions. Tools are served by the embedded "firestorm" MCP server.
 ---
 
 # Driving the Firestorm avatar
@@ -46,22 +46,24 @@ root for the written reference. By area:
 | Health | `ping` | Liveness check |
 | Viewer | `viewer.getGrid`, `viewer.notify` | Confirm which grid you're on (every turn — see above); post a toast to get the user's attention (persistent by default; `tip:true` = fades) |
 | RLV | `rlv.getStatus`, `rlv.getRestrictions`, `rlv.canDo` | See what's restricted **before** acting |
-| Inventory | `inventory.getFolder`/`getItem`/`search`/`createFolder`/`rename`/`move`/`copy`/`delete`/`giveItem`/`giveFolder`/`createItem`/`refresh`/`setPermissions` | Browse, organize, give, set next-owner permissions |
-| Notecards/Scripts | `notecard.read`/`write`, `script.read`/`write` | Read/edit item contents; scripts compile (mono/lsl2/luau/lsl-luau) |
+| Inventory | `inventory.getFolder`/`getItem`/`search`/`createFolder`/`rename`/`move`/`copy`/`delete`/`giveItem`/`giveFolder`/`createItem`/`refresh`/`setPermissions` | Browse (including the Library: `folder:"library"`, `root:"library"`), organize, give, set next-owner, group and everyone permissions |
+| Notecards/Scripts | `notecard.read`/`write`, `script.read`/`write` | Read/edit item contents in your inventory or inside a prim (`object_id` + `item`); scripts compile (mono/lsl2/luau/lsl-luau); notecards keep embedded items as `{{item:N}}` |
 | Appearance | `appearance.wearItems`/`detachItems`/`wearOutfit`/`listOutfits`/`getWorn` | Wear/remove, outfits |
 | Gestures | `gesture.list`/`read`/`create`/`write`/`activate`/`deactivate`/`play` | Author gestures (trigger, key bind, animation/sound/chat/wait steps); activate and fire them |
 | Wearables | `wearable.read`/`create`/`write` | Author clothing & body parts — textures, tint, and slider params. **Writes are worn-only**; detach, wait 5 s and re-attach afterwards to save |
-| Profile | `profile.get`/`setSelf`, `profile.getPicks`/`getClassifieds`, `people.getNames`, `people.getFriends` | View/edit profiles, read picks & classified ads in full, resolve names, list friends (online + granted rights) |
+| Profile | `profile.get`/`setSelf`, `profile.getPicks`/`getClassifieds`, `people.getNames`, `people.getFriends` | View/edit profiles, read picks & classified ads in full, resolve names, list friends (online + granted rights); `people.offerFriendship` |
 | Search | `search.people`/`places`/`groups`/`events`/`land`/`classifieds` | Directory search (headless) |
 | Nearby | `avatars.getNearby`, `avatars.getWorn` | Who's around, where they are & which way they face, what they have attached |
-| Movement & world | `objects.getNearby`, `movement.teleport`/`walkTo`/`turn`/`sit`/`stand`, `agent.getLocation`, `object.touch` | Find nearby objects, go somewhere (teleport or walk), turn in place, sit, know where you are, operate objects |
+| Movement & world | `objects.getNearby`, `movement.teleport`/`walkTo`/`turn`/`sit`/`stand`, `agent.getLocation`, `object.touch`, `agent.control`/`gameControl` | Find nearby objects, go somewhere (teleport or walk), turn in place, sit (with an offset, on the ground, or on another link), know where you are, operate objects, press movement keys and mouse buttons |
 | Animation (AO) | `ao.getStatus`/`setEnabled`/`selectSet`/`cycle` | Firestorm client-side animation overlay |
 | Vision & HUD | `vision.snapshot`, `camera.set`/`get`/`clear`, `hud.click` | See the scene (snapshot; `show_hud:true` includes HUD overlays), look from your own camera without moving the user's, click a HUD button by screen coordinate |
 | IM (1:1) | `im.send`/`replies`/`getConversations`/`getMessages` | Private person-to-person messaging |
-| Notifications | `notifications.list`/`respond` | Answer offers (items/teleport/friendship/group) + blue-menu dialogs |
+| Notifications | `notifications.list`/`respond` | Answer offers (items/teleport/friendship/group), blue-menu dialogs and script text boxes |
 | Groups | `group.list`/`getInfo`/`activate`/`sendIM`/`getNotices`/`sendNotice` | Group chat + notices |
 | Uploads | `upload.image`/`sound`/`animation`/`material`/`mesh` | Upload assets (cost L$ — see below) |
-| Building | `object.create`/`rez`/`attach`/`get`/`edit`/`setFaces`/`contents`/`addContents`/`copyContents`/`removeContents`/`setScriptExperience`/`setPermissions`/`link`/`unlink`/`take`, `experience.list` | Turn uploads into finished items without the Build floater (see below) |
+| Building | `object.create`/`rez`/`attach`/`get`/`edit`/`setFaces`/`contents`/`addContents`/`copyContents`/`removeContents`/`renameContents`/`setScriptExperience`/`setPermissions`/`link`/`unlink`/`take`/`drop`/`duplicate`, `experience.list` | Turn uploads into finished items without the Build floater (see below) |
+| Scripts in objects | `object.resetScripts`/`setScriptsRunning`/`getScriptsRunning` | Reset scripts, stop and start them, read whether they run |
+| Reading objects | `object.get {details:true}`, `object.menuState`, `object.payPrices`, `sounds.recent` | What a prim shows and plays: touch/sit text, sale info, texture animation, particles, light and projector, sound; which pie menu entries are enabled; what the pay dialog offers |
 | Money | `money.getBalance`/`pay` | Check balance; pay L$ (pay is fenced — see below) |
 
 ## RLV restrictions are HARD-enforced
@@ -178,6 +180,10 @@ appear; say so if nothing matches.
   overlays (the viewer UI itself stays hidden); then `hud.click {x, y}` presses a HUD button by
   **normalized 0..1 top-left coordinate** — aim by where the button sits in that screenshot.
   (`hud.click` only hits HUDs; use `object.touch` for in-world objects.)
+- **Touching precisely.** `object.touch {id, face, st:[s,t]}` touches a chosen point on a face, and
+  `position` touches the surface nearest a region point; scripts then see real
+  `llDetectedTouchST`/`UV`/`Pos`. `hold_ms` keeps the button down. `object.touch` also works on a
+  HUD prim by id.
 - **Looking from somewhere else.** The user's camera is theirs — don't wait for them to point it.
   `camera.set {object_id}` (or `avatar_id` / `global_position`) places your own camera, framed on
   the target from the side facing you; add `yaw_deg` to walk around it (0=East, 90=North),
@@ -207,7 +213,8 @@ appear; say so if nothing matches.
   `status:"arrived"|"stopped"` + final distance). Get positions from `search.places`,
   `avatars.getNearby`, or `objects.getNearby`. `movement.turn` rotates in place without walking
   (a relative `degrees`, +left/−right, or something to face). `movement.sit`/`stand` wait ~5s and
-  report the actual sitting state.
+  report the actual sitting state; `movement.sit` returns `on_target` and fails if the avatar ends
+  up somewhere else.
 - **Movement takes real time — one move at a time.** `movement.teleport`/`walkTo`/`sit`/`stand`
   are asynchronous, and each tool call **blocks until the move actually completes** (or times out —
   up to ~60s for teleport/walk, ~5s for sit/stand), then returns the outcome. So **wait for each
@@ -226,7 +233,8 @@ appear; say so if nothing matches.
   offer, a friendship request, a group invite, or a scripted object's **blue-menu (`llDialog`)** —
   shows up in `notifications.list` as a typed entry with its `buttons`. Press one with
   `notifications.respond {id, button}` (button by **name**: `Keep`/`Discard`, `Accept`/`Decline`,
-  or a dialog's own label). **This is the only way to answer a blue menu.** A common loop:
+  or a dialog's own label). **This is the only way to answer a blue menu.** A script text box
+  (`type:"script_textbox"`) is answered with `notifications.respond {id, text}`. A common loop:
   `object.touch` a vendor/furniture → it opens a menu → `notifications.list` → `notifications.respond`.
   To **clear** a notification you don't need to act on — a `group_notice`, an info toast — use
   `notifications.dismiss {id}` (omit `id` to clear all). It does **not** press any button, so it

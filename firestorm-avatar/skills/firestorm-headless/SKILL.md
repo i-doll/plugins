@@ -70,12 +70,14 @@ including RLV enforcement. Two tools exist only in headless: `viewer.quit` and
 2. `script.write {"item_id":…, "target":"mono"|"lsl2"|"luau"|"lsl-luau", "text":"…"}`. The reply
    says whether it compiled, with the errors if not.
 3. `object.create {"shape":"box"}` to get a prim to hold it.
-4. `chat.listen {"channel":7777,"seconds":120}` before the script starts talking.
+4. Note `last_seq` from `chat.history {"limit":1}`.
 5. `object.addContents {"object_id":…, "item_ids":[…]}`. The script starts running.
-6. `chat.replies {"channel":7777}` returns what the script said.
+6. `chat.history {"since_seq":…}` returns what the script said with `llOwnerSay`, and its
+   run-time errors and `DEBUG_CHANNEL` lines (`type:"debug"`).
 
-Have the script report with `llSay` on a non-zero channel; `llOwnerSay` isn't captured. Delay the
-first output with a short `llSetTimerEvent` so the listener is in place. Encode values so nothing
+To hear a script on a non-zero channel, open `chat.listen` before it talks and read
+`chat.replies`. `object.resetScripts` restarts a script without a new item, and
+`object.setScriptsRunning` stops and starts it. Encode values so nothing
 is lost, for example wrap each one in `[…]` so leading and trailing spaces show. Use a new script
 item for each test.
 

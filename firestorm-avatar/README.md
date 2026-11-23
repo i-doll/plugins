@@ -24,7 +24,7 @@ not shipped here. To use this plugin you need that viewer:
 - Running and logged in.
 - Debug Setting **`IDMCPServerEnabled = 1`** (loopback, no auth — any local process can drive the
   avatar while enabled).
-- For the `chat.*` tools: **`UseLSLBridge`** on and **`IDMCPBridgeChatEnabled = 1`**, with the
+- For the bridge `chat.*` tools (all but `chat.history` and `chat.send {as_avatar:true}`): **`UseLSLBridge`** on and **`IDMCPBridgeChatEnabled = 1`**, with the
   bridge attached at **v2.30+**.
 - For `money.pay` (spends real L$): **`IDMCPMoneyEnabled = 1`** (off by default), capped by
   **`IDMCPMoneyMaxAmount`** (default 1000). `money.getBalance` needs neither.
