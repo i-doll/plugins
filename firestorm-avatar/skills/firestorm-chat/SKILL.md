@@ -5,9 +5,10 @@ description: Use when talking to in-world scripted objects, HUDs, vendors, or an
 
 # In-world scripted chat (via the LSL bridge)
 
-Second Life scripted objects talk on chat *channels*. The viewer itself can only say on
-channel 0 / positive channels and only *hears* channel-0, owner-say, and debug chat — so it
-can't hold a two-way conversation with a script on a private channel. The `chat.*` tools get
+Second Life scripted objects talk on chat *channels*. Your avatar can say something on any
+channel (`chat.send {as_avatar:true}`), but the viewer only *hears* channel 0, owner-say and debug
+chat (read them with `chat.history`) — so it can't hold a two-way conversation with a script on a
+private channel. The `chat.*` tools get
 around this by routing through the **Firestorm LSL bridge**: a worn, owned LSL *script* that
 can `llListen`/`llSay` on **any** channel and relays what it hears back to you.
 
@@ -60,8 +61,8 @@ concurrent agent listens. If you leak them the bridge stops accepting new listen
 - **By default the message is sent from the bridge object, not "as you."** Scripts see the
   bridge's object key as the sender (which is exactly what makes replies routable). To instead
   speak **as the avatar** — normal public chat that reads as the user — pass `chat.send
-  {as_avatar: true}` (channel 0 or a positive channel only; it's fire-and-forget, no bridge
-  listen, and can't reach negative/protocol channels). Use `as_avatar` for talking to people;
+  {as_avatar: true}` (any channel; on a negative channel `type` is ignored and the message is
+  limited to 254 bytes; it's fire-and-forget, with no bridge listen). Use `as_avatar` for talking to people;
   use the default bridge path for talking to scripts/relays.
 - **What's hearable:** the bridge hears normal object chat on the channel you listened on. It
   cannot hear things no script can hear. Objects that reply via `llRegionSayTo` to a *different*
