@@ -46,14 +46,14 @@ root for the written reference. By area:
 | Health | `ping` | Liveness check |
 | Viewer | `viewer.getGrid`, `viewer.notify` | Confirm which grid you're on (every turn — see above); post a toast to get the user's attention (persistent by default; `tip:true` = fades) |
 | RLV | `rlv.getStatus`, `rlv.getRestrictions`, `rlv.canDo` | See what's restricted **before** acting |
-| Inventory | `inventory.getFolder`/`getItem`/`search`/`createFolder`/`rename`/`move`/`copy`/`delete`/`giveItem`/`giveFolder`/`createItem`/`refresh`/`setPermissions` | Browse (including the Library: `folder:"library"`, `root:"library"`), organize, give, set next-owner, group and everyone permissions |
+| Inventory | `inventory.getFolder`/`getItem`/`search`/`createFolder`/`rename`/`move`/`copy`/`delete`/`giveItem`/`giveFolder`/`createItem`/`refresh`/`setPermissions` | Browse (including the Library: `folder:"library"`, `root:"library"`), organize, give, delete (to Trash, or `purge:true` for good), set next-owner, group and everyone permissions |
 | Notecards/Scripts | `notecard.read`/`write`, `script.read`/`write` | Read/edit item contents in your inventory or inside a prim (`object_id` + `item`); scripts compile (mono/lsl2/luau/lsl-luau); notecards keep embedded items as `{{item:N}}` |
 | Appearance | `appearance.wearItems`/`detachItems`/`wearOutfit`/`listOutfits`/`getWorn` | Wear/remove, outfits |
 | Gestures | `gesture.list`/`read`/`create`/`write`/`activate`/`deactivate`/`play` | Author gestures (trigger, key bind, animation/sound/chat/wait steps); activate and fire them |
 | Wearables | `wearable.read`/`create`/`write` | Author clothing & body parts — textures, tint, and slider params. **Writes are worn-only**; detach, wait 5 s and re-attach afterwards to save |
 | Profile | `profile.get`/`setSelf`, `profile.getPicks`/`getClassifieds`, `people.getNames`, `people.getFriends` | View/edit profiles, read picks & classified ads in full, resolve names, list friends (online + granted rights); `people.offerFriendship` |
 | Search | `search.people`/`places`/`groups`/`events`/`land`/`classifieds` | Directory search (headless) |
-| Nearby | `avatars.getNearby`, `avatars.getWorn` | Who's around, where they are & which way they face, what they have attached |
+| Nearby | `avatars.getNearby`, `avatars.getWorn`, `avatars.getEffects` | Who's around, where they are & which way they face, what they have attached, and a texture animation or particles set on an avatar |
 | Movement & world | `objects.getNearby`, `movement.teleport`/`walkTo`/`turn`/`sit`/`stand`, `agent.getLocation`, `object.touch`, `agent.control`/`gameControl` | Find nearby objects, go somewhere (teleport or walk), turn in place, sit (with an offset, on the ground, or on another link), know where you are, operate objects, press movement keys and mouse buttons |
 | Animation (AO) | `ao.getStatus`/`setEnabled`/`selectSet`/`cycle` | Firestorm client-side animation overlay |
 | Vision & HUD | `vision.snapshot`, `camera.set`/`get`/`clear`, `hud.click` | See the scene (snapshot; `show_hud:true` includes HUD overlays), look from your own camera without moving the user's, click a HUD button by screen coordinate |
