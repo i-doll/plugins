@@ -83,15 +83,19 @@ item for each test.
 
 ## Cleanup and containment
 
-- Every object you rez or create through MCP goes on a ledger. `viewer.quit` deletes them all,
-  then logs out and exits 0. SIGTERM and the idle timeout do the same. After a crash, the next
+- Every object you rez or create through MCP (`object.create`, `object.rez`, `object.duplicate`,
+  `object.drop`) goes on a ledger. `viewer.quit` deletes them all, purges the copies that deleting
+  puts in Trash (`cleanup.purged`), then logs out and exits 0. SIGTERM and the idle timeout do the same. After a crash, the next
   launch of that avatar deletes the leftovers before `ready`.
+- Objects a script rezzes (`llRezObject`, `llRezAtRoot`) are not on the ledger and stay in-world:
+  have the script rez them temporary or `llDie` them.
 - `"keep":true` on `object.create` or `object.rez` leaves that object in-world.
   `"temporary":true` makes the region delete it about a minute after rezzing.
 - A linkset that mixes ledger and non-ledger prims is never deleted. It is reported under
   `cleanup.mixed`, and so are objects in another region under `cleanup.unresolved`. Clean those up
   yourself.
-- Inventory you create goes under `Headless Tests/<run>/` and stays after the run. Destinations
+- Inventory you create goes under `Headless Tests/<run>/` and stays after the run.
+  `inventory.delete` moves an item to Trash; add `"purge":true` to delete it for good. Destinations
   outside that folder (or `#RLV/Headless Tests/<run>/` for RLV shared-folder tests) are refused.
 - End every session with `viewer.quit` and check the status file's `cleanup` report.
 
